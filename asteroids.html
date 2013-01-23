@@ -60,14 +60,16 @@ function Ship(x, y, vx, vy, radius, direction) {
         if (keyPressed(DOWN)) {
             scale -= ACCELERATION;
         }
-        [ax, ay] = unitVector(this.direction);
+        var vec = unitVector(this.direction);
+        ax = vec[0];
+        ay = vec[1];
         ax *= scale;
         ay *= scale;
         this.vx += ax;
         this.vy += ay;
 
-        this.x += this.vx;
-        this.y += this.vy;
+        this.x = modulo(this.x + this.vx, 400);
+        this.y = modulo(this.y + this.vy, 400);
     };
 
     this.draw = function() {
@@ -198,7 +200,6 @@ function unitVector(theta) {
     theta = modulo(theta, Math.PI*2);
     // quadrant 0, 1, 2, or 3, in counter-clockwise order
     var quadrant = Math.floor(theta / (Math.PI/2));
-    console.log(quadrant);
     var x, y;
     //////////////// scary trig section //////////////////
     switch (quadrant) {
@@ -208,7 +209,6 @@ function unitVector(theta) {
         break;
     case 1:
         theta = Math.PI - theta;
-        console.log(theta);
         x = -Math.cos(theta);
         y = Math.sin(theta);
         break;
