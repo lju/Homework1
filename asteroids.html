@@ -7,51 +7,132 @@
 var canvas = document.getElementById("myCanvas");
 var ctx = canvas.getContext("2d");
 
-var ship = new Object();
-ship.left = 200;
-ship.top = 200;
-//ship.direction = "up";
-//ship.velocity = 0;
-//ship.shoot = function(){}
- 
-ctx.fillRect(ship.left, ship.top, 20, 20);
-function drawShip() {
-	ctx.clearRect(0, 0, 400, 400);
-	ctx.fillRect(ship.left, ship.top, 20, 20);
-}
+/*********************************/
+/* constants */
+/*********************************/
 
-// Movement... diagonal?
-function onKeyDown(event) {
-    if (event.keyCode === 37) {
-	//	ship.direction = "left";
-		drawShip(--ship.left, ship.top);
-	}
-	
-	if (event.keyCode === 38) {
-	//	ship.direction = "up";
-		drawShip(ship.left, --ship.top);
-	}
-	
-	if (event.keyCode === 39) {
-	//	ship.direction = "right";
-		drawShip(++ship.left, ship.top);
-	}
-	
-	if (event.keyCode === 40) {
-	//	ship.direction = "down";
-		drawShip(ship.left, ++ship.top);
-	}
-	
-	//if (event.keyCode === 32) {
-	//	ship.shoot(ship.direction, ship.left, ship.top);
-}
+var MAX_HEALTH = 100;
+var SHIP_IMAGE = "ship.png";
+var ASTEROID_IMAGE = "asteroid.png";
+var PERIOD = 50; // how many ms to wait between calls to mainLoop.
+var ACCELARATION = 1;
+var TURN_SPEED = 0.05; // radians/period when holding left or right
+// TODO: have torque instead. Need angular momentum. Shouldn't be too hard.
 
+var LEFT = 37;
+var UP = 38;
+var RIGHT = 39;
+var DOWN = 40;
+
+function updateLocation() {
+    this.x += this.vx;
+    this.y += this.vy;
+};
+
+/*********************************/
+/* objects */
+/*********************************/
+
+function Ship(x, y, vx, vy, radius, direction) {
+    this.x = x;
+    this.y = y;
+    this.vx = vx;
+    this.vy = vy;
+    this.radius = radius; // ship is a circle
+    // direction in radians
+    this.direction = direction;
+    this.health = MAX_HEALTH;
+    this.update = function() {
+        // TODO: implement UP/DOWN for increasing/decreasing speed
+        if (keyPressed(LEFT)) {
+            this.direction -= TURN_SPEED;
+        }
+        if (keyPressed(RIGHT)) {
+            this.direction += TURN_SPEED;
+        }
+        this.x += this.vx;
+        this.y += this.vy;
+        };
+};
+
+function Asteroid(x, y, vx, vy, radius) {
+    this.x = x;
+    this.y = y;
+    this.vx = vx;
+    this.vy = vy;
+    this.radius = radius;
+    this.update = updateLocation;
+};
+
+function Bullet(x, y, vx, vy, radius) {
+    this.x = x;
+    this.y = y;
+    this.vx = vx;
+    this.vy = vy;
+    this.radius = radius;
+    this.update = updateLocation;
+};
+
+/*********************************/
+/* setup */
+/*********************************/
+
+var ship = new Ship(100, 100, 1, 1, 5, 0);
+
+/* The function that starts it all. Do some basic startup garbage, call
+ * mainLoop, and you're done. */
 function run() {
-	canvas.addEventListener('keydown', onKeyDown, false);
+    canvas.addEventListener('keydown', onKeyDown, false);
+    canvas.addEventListener('keyup', onKeyUp, false);
+    canvas.setAttribute('tabindex','0');
+    canvas.focus();
+    setInterval(mainLoop, PERIOD);
+}
 
-	// make canvas focusable, then give it focus!
-	canvas.setAttribute('tabindex','0');
-	canvas.focus();
+/* This function is called to update everything: move the ship, kill things,
+ * draw everything. */
+function mainLoop() {
+    ship.update();
+    console.log(ship.direction);
+    drawAll();
+};
+
+/*********************************/
+/* keys */
+/*********************************/
+
+var keys = [];
+
+/* This is the only function you'll use to check if a key is currently
+ * pressed. */
+function keyPressed(keyCode) {
+    return keys[keyCode] === true;
+}
+
+function onKeyDown(event) {
+    keys[event.keyCode] = true;
+}
+
+function onKeyUp(event) {
+    delete keys[event.keyCode];
+}
+
+
+/*********************************/
+/* drawing */
+/*********************************/
+
+/* This is the place where everything is drawn from. Every drawFoo() function
+ * should be called here and only here! */
+function drawAll() {
+    drawShip();
+};
+
+/* Draws the ship, duh! */
+function drawShip() {
+    ctx.clearRect(0, 0, 400, 400);
+    // TODO: x, y are center, not top-left
+    ctx.fillRect(ship.x, ship.y, 20, 20);
 }
 
 run();
