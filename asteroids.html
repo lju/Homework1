@@ -11,23 +11,26 @@ var ctx = canvas.getContext("2d");
 /* constants */
 /*********************************/
 
-var MAX_HEALTH = 100;
+var MAX_HEALTH = 1;
 var SHIP_IMAGE = "ship.png";
 var ASTEROID_IMAGE = "asteroid.png";
 var PERIOD = 50; // how many ms to wait between calls to mainLoop.
-var ACCELERATION = 0.1;
-var TURN_SPEED = 0.05; // radians/period when holding left or right
-// TODO: have torque instead. Need angular momentum. Shouldn't be too hard.
+var ACCELERATION = 0.5;
+var TURN_SPEED = 0.2; // radians/period when holding left or right
+var BULLET_SPEED = 8.0;
+var BULLET_RADIUS = 5.0;
+var BULLET_LIFESPAN = 1000; // how long a bullet lasts before disappearing
+var FRICTION = 0.15;
+var ASTEROID_PERIOD = 2000; // how long to wait between asteroid creations
+var ASTEROID_SPEED = 5.0;
+var ASTEROID_RADIUS = 10.0;
+var MAX_BULLETS = 7;
 
+var SPACE = 32;
 var LEFT = 37;
 var UP = 38;
 var RIGHT = 39;
 var DOWN = 40;
-
-function updateLocation() {
-    this.x += this.vx;
-    this.y += this.vy;
-};
 
 /*********************************/
 /* objects */
@@ -45,31 +48,48 @@ function Ship(x, y, vx, vy, radius, direction) {
     this.img.src = "arrow.jpg";
 
     this.update = function() {
-        /////////// direction ////////////
-        if (keyPressed(LEFT)) {
+        /////////// position ////////////
+        var ax, ay, scale, vec, vx, vy, v, normVx, normVy;
+		
+		if (keyPressed(LEFT)) {
             this.direction -= TURN_SPEED;
         }
         if (keyPressed(RIGHT)) {
             this.direction += TURN_SPEED;
         }
-        ////////// acceleration //////////
-        var ax, ay, scale = 0;
+        // accleration
+        scale = 0;
         if (keyPressed(UP)) {
             scale += ACCELERATION;
         }
         if (keyPressed(DOWN)) {
             scale -= ACCELERATION;
         }
-        var vec = unitVector(this.direction);
-        ax = vec[0];
-        ay = vec[1];
-        ax *= scale;
-        ay *= scale;
+        dir = unitVector(this.direction);
+        ax = dir[0] * scale;
+        ay = dir[1] * scale;
+        // friction
+        v = Math.sqrt(this.vx*this.vx + this.vy*this.vy);
+        normVx = this.vx / v;
+        normVy = this.vy / v;
+        ax -= FRICTION * normVx;
+        ay -= FRICTION * normVy;
+
         this.vx += ax;
         this.vy += ay;
 
-        this.x = modulo(this.x + this.vx, 400);
-        this.y = modulo(this.y + this.vy, 400);
+        this.x = modulo(this.x + this.vx, canvas.width);
+        this.y = modulo(this.y + this.vy, canvas.height);
+
+        /////////// shoot bullets ////////////
+        if (keyPressed(SPACE) && bullets.length < MAX_BULLETS) {
+            dir = unitVector(this.direction);
+            vx = dir[0] * BULLET_SPEED;
+            vy = dir[1] * BULLET_SPEED;
+            bullets.push(new Bullet(this.x, this.y,
+                                    this.vx + vx, this.vy + vy,
+                                    BULLET_RADIUS));
+        }
     };
 
     this.draw = function() {
@@ -83,6 +103,24 @@ function Ship(x, y, vx, vy, radius, direction) {
 
 };
 
+function GameOver()
+{
+	clearInterval(intervalID);
+	ctx.font = "20px Arial";
+	ctx.fillText("GAME OVER", 166, 200);
+	console.log("Game over");
+}
+
+function UpdateHealth(ship)
+{
+	ship.health--;
+	
+	if (ship.health === 0)
+	{
+		GameOver();
+	}
+}
+
 function Asteroid(x, y, vx, vy, radius) {
     this.x = x;
     this.y = y;
@@ -90,8 +128,17 @@ function Asteroid(x, y, vx, vy, radius) {
     this.vy = vy;
     this.radius = radius;
     this.update = function() {
-        this.x += this.vx;
-        this.y += this.vy;
+        var i;
+        this.x = modulo(this.x + this.vx, canvas.width);
+        this.y = modulo(this.y + this.vy, canvas.height);
+        // game over
+        if (collides(this, ship)) {
+            UpdateHealth(ship);
+        }
+    };
+    this.draw = function() {
+        ctx.fillStyle = "brown";
+        drawCircle(this.x, this.y, this.radius);
     };
 };
 
@@ -101,9 +148,18 @@ function Bullet(x, y, vx, vy, radius) {
     this.vx = vx;
     this.vy = vy;
     this.radius = radius;
+    this.spawnTime = getTime();
     this.update = function() {
-        this.x += this.vx;
-        this.y += this.vy;
+        this.x = modulo(this.x + this.vx, canvas.width);
+        this.y = modulo(this.y + this.vy, canvas.height);
+        var self = this; // fucking javascript won't let me pass "this"
+        asteroids = asteroids.filter(function(asteroid) {
+            return !collides(self, asteroid);
+        });
+    };
+    this.draw = function() {
+        ctx.fillStyle = "red";
+        drawCircle(this.x, this.y, this.radius);
     };
 };
 
@@ -112,6 +168,9 @@ function Bullet(x, y, vx, vy, radius) {
 /*********************************/
 
 var ship = new Ship(100, 100, 1, 1, 5, 0);
+var bullets = [];
+var asteroids = [new Asteroid(200, 400, 1, 1, 10)];
+var lastAsteroidSpawn = 0;
 
 /* The function that starts it all. Do some basic startup garbage, call
  * mainLoop, and you're done. */
@@ -120,15 +179,64 @@ function run() {
     canvas.addEventListener('keyup', onKeyUp, false);
     canvas.setAttribute('tabindex','0');
     canvas.focus();
-    setInterval(mainLoop, PERIOD);
+    intervalID = setInterval(mainLoop, PERIOD);
 }
 
 /* This function is called to update everything: move the ship, kill things,
  * draw everything. */
 function mainLoop() {
+    var i, newBullets, now, vec, newAsteroid;
     ship.update();
+	
+    // go through each bullet, updating and maybe appending to newBullets.
+    // Basically, newBullets is a filter of bullets.
+    newBullets = [];
+    now = getTime();
+    var update = function(x) { x.update(); };
+    bullets.forEach(update);
+    asteroids.forEach(update);
+    // delete old bullets
+    bullets = bullets.filter(function(bullet) {
+        return now - bullet.spawnTime < BULLET_LIFESPAN;
+    });
+
+    // spawn a new asteroid
+    if (now - lastAsteroidSpawn > ASTEROID_PERIOD) {
+        lastAsteroidSpawn = now;
+        // make a new asteroid, randomly, but not colliding with ship
+        do {
+            vec = unitVector(Math.random());
+            newAsteroid = new Asteroid(
+                Math.random()*canvas.width,
+                Math.random()*canvas.height,
+                vec[0] * ASTEROID_SPEED * Math.random(),
+                vec[1] * ASTEROID_SPEED * Math.random(),
+                ASTEROID_RADIUS);
+            var dist = distance(ship.x, ship.y, newAsteroid.x, newAsteroid.y);
+        } while (dist < ship.radius + 3*newAsteroid.radius);
+        asteroids.push(newAsteroid);
+    }
+
     drawAll();
 };
+
+
+/* This is the place where everything is drawn from. Every drawFoo() function
+ * should be called here and only here! */
+function drawAll() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+	ctx.font = "20px Arial";
+	ctx.fillText("Health: " + String(ship.health), 5, 20);
+	ctx.fillText("Health: " + String(ship.health), 5, 20);
+    ship.draw();
+    var draw = function(x) { x.draw(); };
+    bullets.forEach(draw);
+    asteroids.forEach(draw);
+};
+
+run();
+
+
 
 /*********************************/
 /* keys */
@@ -149,20 +257,6 @@ function onKeyDown(event) {
 function onKeyUp(event) {
     delete keys[event.keyCode];
 }
-
-
-/*********************************/
-/* drawing */
-/*********************************/
-
-/* This is the place where everything is drawn from. Every drawFoo() function
- * should be called here and only here! */
-function drawAll() {
-    ctx.clearRect(0, 0, 400, 400);
-    ship.draw();
-};
-
-run();
 
 
 /*********************************/
@@ -226,6 +320,30 @@ function unitVector(theta) {
     return [x, y];
 };
 
+
+/* shamelessly copied from the course notes */
+function drawCircle(cx, cy, radius) {
+    ctx.beginPath();
+    ctx.arc(cx, cy, radius, 0, 2*Math.PI, false);
+    ctx.fill();
+}
+
+/* returns the unix time */
+function getTime() {
+    var d = new Date();
+    return d.getTime();
+}
+
+/* What is the distance between (x1,y1) and (x2, y2) */
+function distance(x1, y1, x2, y2) {
+    return Math.sqrt((x1-x2)*(x1-x2) + (y1-y2)*(y1-y2));
+};
+
+/* Are two circle-like object colliding? */
+function collides(circle1, circle2) {
+    return distance(circle1.x, circle1.y, circle2.x, circle2.y) <
+        circle1.radius + circle2.radius;
+}
 
 </script>
 </html>
