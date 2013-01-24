@@ -11,7 +11,7 @@ var ctx = canvas.getContext("2d");
 /* constants */
 /*********************************/
 
-var MAX_HEALTH = 100;
+var MAX_HEALTH = 1;
 var SHIP_IMAGE = "ship.png";
 var ASTEROID_IMAGE = "asteroid.png";
 var PERIOD = 50; // how many ms to wait between calls to mainLoop.
@@ -50,7 +50,8 @@ function Ship(x, y, vx, vy, radius, direction) {
     this.update = function() {
         /////////// position ////////////
         var ax, ay, scale, vec, vx, vy, v, normVx, normVy;
-        if (keyPressed(LEFT)) {
+		
+		if (keyPressed(LEFT)) {
             this.direction -= TURN_SPEED;
         }
         if (keyPressed(RIGHT)) {
@@ -102,6 +103,24 @@ function Ship(x, y, vx, vy, radius, direction) {
 
 };
 
+function GameOver()
+{
+	clearInterval(intervalID);
+	ctx.font = "20px Arial";
+	ctx.fillText("GAME OVER", 166, 200);
+	console.log("Game over");
+}
+
+function UpdateHealth(ship)
+{
+	ship.health--;
+	
+	if (ship.health === 0)
+	{
+		GameOver();
+	}
+}
+
 function Asteroid(x, y, vx, vy, radius) {
     this.x = x;
     this.y = y;
@@ -114,7 +133,7 @@ function Asteroid(x, y, vx, vy, radius) {
         this.y = modulo(this.y + this.vy, canvas.height);
         // game over
         if (collides(this, ship)) {
-            console.log("Game over!");
+            UpdateHealth(ship);
         }
     };
     this.draw = function() {
@@ -160,7 +179,7 @@ function run() {
     canvas.addEventListener('keyup', onKeyUp, false);
     canvas.setAttribute('tabindex','0');
     canvas.focus();
-    setInterval(mainLoop, PERIOD);
+    intervalID = setInterval(mainLoop, PERIOD);
 }
 
 /* This function is called to update everything: move the ship, kill things,
@@ -168,7 +187,7 @@ function run() {
 function mainLoop() {
     var i, newBullets, now, vec, newAsteroid;
     ship.update();
-
+	
     // go through each bullet, updating and maybe appending to newBullets.
     // Basically, newBullets is a filter of bullets.
     newBullets = [];
@@ -206,6 +225,8 @@ function mainLoop() {
  * should be called here and only here! */
 function drawAll() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
+	ctx.font = "20px Arial";
+	ctx.fillText("Health: " + String(ship.health), 5, 20);
     ship.draw();
     var draw = function(x) { x.draw(); };
     bullets.forEach(draw);
