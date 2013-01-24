@@ -11,7 +11,7 @@ var ctx = canvas.getContext("2d");
 /* constants */
 /*********************************/
 
-var MAX_HEALTH = 1;
+var MAX_HEALTH = 100;
 var SHIP_IMAGE = "ship.png";
 var ASTEROID_IMAGE = "asteroid.png";
 var PERIOD = 50; // how many ms to wait between calls to mainLoop.
@@ -114,6 +114,7 @@ function GameOver()
 function UpdateHealth(ship)
 {
 	ship.health--;
+	drawAll();
 	
 	if (ship.health === 0)
 	{
