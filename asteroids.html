@@ -25,6 +25,7 @@ var ASTEROID_PERIOD = 2000; // how long to wait between asteroid creations
 var ASTEROID_SPEED = 5.0;
 var ASTEROID_RADIUS = 10.0;
 var MAX_BULLETS = 7;
+var GAME_OVER = false;
 
 var SPACE = 32;
 var LEFT = 37;
@@ -45,7 +46,7 @@ function Ship(x, y, vx, vy, radius, direction) {
     this.direction = direction; // direction in radians
     this.health = MAX_HEALTH;
     this.img = new Image();
-    this.img.src = "arrow.jpg";
+    this.img.src = SHIP_IMAGE;
 
     this.update = function() {
         /////////// position ////////////
@@ -103,7 +104,7 @@ function Ship(x, y, vx, vy, radius, direction) {
 
 };
 
-function GameOver()
+function GameOver() // also possible to do a constant variable GAME_OVER
 {
 	clearInterval(intervalID);
 	ctx.font = "20px Arial";
@@ -153,7 +154,7 @@ function Bullet(x, y, vx, vy, radius) {
     this.update = function() {
         this.x = modulo(this.x + this.vx, canvas.width);
         this.y = modulo(this.y + this.vy, canvas.height);
-        var self = this; // fucking javascript won't let me pass "this"
+        var self = this; // fucking javascript won't let me pass "this" <-- hahah
         asteroids = asteroids.filter(function(asteroid) {
             return !collides(self, asteroid);
         });
@@ -172,6 +173,7 @@ var ship = new Ship(100, 100, 1, 1, 5, 0);
 var bullets = [];
 var asteroids = [new Asteroid(200, 400, 1, 1, 10)];
 var lastAsteroidSpawn = 0;
+var score = 0;
 
 /* The function that starts it all. Do some basic startup garbage, call
  * mainLoop, and you're done. */
@@ -226,8 +228,12 @@ function mainLoop() {
  * should be called here and only here! */
 function drawAll() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
+	ctx.fillStyle="#000000";
+	ctx.fillRect(0,0,canvas.width, canvas.height);
 	ctx.font = "20px Arial";
+	ctx.fillStyle="#FF0000";
 	ctx.fillText("Health: " + String(ship.health), 5, 20);
+	ctx.fillText("Score: " + String(score), 5, canvas.height - 10);
     ship.draw();
     var draw = function(x) { x.draw(); };
     bullets.forEach(draw);
