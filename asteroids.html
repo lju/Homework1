@@ -1,5 +1,5 @@
 <html>
-<canvas id="myCanvas" width="400" height="400"
+<canvas id="myCanvas" width="600" height="600"
         style="border:1px solid #000000;">
 </canvas>
 <script>
@@ -13,19 +13,21 @@ var ctx = canvas.getContext("2d");
 
 var MAX_HEALTH = 100;
 var SHIP_IMAGE = "ship.png";
+var SHIP_WIDTH = 91;
+var SHIP_HEIGHT = 65;
 var ASTEROID_IMAGE = "asteroid.png";
 var PERIOD = 50; // how many ms to wait between calls to mainLoop.
 var ACCELERATION = 0.5;
 var TURN_SPEED = 0.2; // radians/period when holding left or right
 var BULLET_SPEED = 8.0;
 var BULLET_RADIUS = 5.0;
-var BULLET_LIFESPAN = 1000; // how long a bullet lasts before disappearing
+var BULLET_LIFESPAN = 5000; // how long a bullet lasts before disappearing
 var FRICTION = 0.15;
 var ASTEROID_PERIOD = 2000; // how long to wait between asteroid creations
 var ASTEROID_SPEED = 5.0;
 var ASTEROID_RADIUS = 10.0;
-var MAX_BULLETS = 7;
-var GAME_OVER = false;
+var MAX_BULLETS = 10;
+var GREEN_COLOR = "#7FFF00";
 
 var SPACE = 32;
 var LEFT = 37;
@@ -37,12 +39,13 @@ var DOWN = 40;
 /* objects */
 /*********************************/
 
-function Ship(x, y, vx, vy, radius, direction) {
+function Ship(x, y, w, h, vx, vy, direction) {
     this.x = x;
     this.y = y;
+	this.w = w;
+	this.h = h;
     this.vx = vx;
     this.vy = vy;
-    this.radius = radius; // ship is a circle
     this.direction = direction; // direction in radians
     this.health = MAX_HEALTH;
     this.img = new Image();
@@ -81,13 +84,19 @@ function Ship(x, y, vx, vy, radius, direction) {
 
         this.x = modulo(this.x + this.vx, canvas.width);
         this.y = modulo(this.y + this.vy, canvas.height);
-
+ 
         /////////// shoot bullets ////////////
         if (keyPressed(SPACE) && bullets.length < MAX_BULLETS) {
+			var vect = unitVector(Math.PI + (Math.PI/2));
+			console.log(String(vect[0]));
+			console.log(String(vect[1]));
             dir = unitVector(this.direction);
             vx = dir[0] * BULLET_SPEED;
             vy = dir[1] * BULLET_SPEED;
-            bullets.push(new Bullet(this.x, this.y,
+			var dir_to_shoot = unitVector(this.direction + (Math.PI/2));
+			var new_x = this.x + ((this.h/2) * dir_to_shoot[0]);
+			var new_y = this.y + ((this.h/2) * dir_to_shoot[1]);
+            bullets.push(new Bullet(new_x + (this.w * dir[0]), new_y + (this.h * dir[1]),
                                     this.vx + vx, this.vy + vy,
                                     BULLET_RADIUS));
         }
@@ -96,9 +105,10 @@ function Ship(x, y, vx, vy, radius, direction) {
     this.draw = function() {
         // TODO: x, y are center, not top-left
         ctx.save();
-        ctx.translate(Math.floor(ship.x), Math.floor(ship.y));
+        //ctx.translate(ship.x/2, ship.y/2);
+		ctx.translate(Math.floor(ship.x), Math.floor(ship.y));
         ctx.rotate(ship.direction);
-        ctx.drawImage(this.img, 0, 0, 20, 20);
+        ctx.drawImage(this.img, 0, 0, SHIP_WIDTH, SHIP_HEIGHT);
         ctx.restore();
     };
 
@@ -115,12 +125,13 @@ function GameOver() // also possible to do a constant variable GAME_OVER
 function UpdateHealth(ship)
 {
 	ship.health--;
-	drawAll();
 	
 	if (ship.health === 0)
 	{
-		GameOver();
+		game_over = true;
 	}
+	
+	drawAll();
 }
 
 function Asteroid(x, y, vx, vy, radius) {
@@ -169,11 +180,12 @@ function Bullet(x, y, vx, vy, radius) {
 /* setup */
 /*********************************/
 
-var ship = new Ship(100, 100, 1, 1, 5, 0);
+var ship = new Ship(100, 100, SHIP_WIDTH, SHIP_HEIGHT, 1, 1, 0);
 var bullets = [];
 var asteroids = [new Asteroid(200, 400, 1, 1, 10)];
 var lastAsteroidSpawn = 0;
 var score = 0;
+var game_over = false;
 
 /* The function that starts it all. Do some basic startup garbage, call
  * mainLoop, and you're done. */
@@ -227,17 +239,29 @@ function mainLoop() {
 /* This is the place where everything is drawn from. Every drawFoo() function
  * should be called here and only here! */
 function drawAll() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-	ctx.fillStyle="#000000";
-	ctx.fillRect(0,0,canvas.width, canvas.height);
-	ctx.font = "20px Arial";
-	ctx.fillStyle="#FF0000";
-	ctx.fillText("Health: " + String(ship.health), 5, 20);
-	ctx.fillText("Score: " + String(score), 5, canvas.height - 10);
-    ship.draw();
-    var draw = function(x) { x.draw(); };
-    bullets.forEach(draw);
-    asteroids.forEach(draw);
+	if (game_over)
+	{
+		clearInterval(intervalID);
+		ctx.font = "20px Arial";
+		ctx.fillStyle = GREEN_COLOR;
+		ctx.fillText("GAME OVER", canvas.width/2 - 30, canvas.height/2);
+		console.log("Game over");
+	}
+    
+	else
+	{
+		ctx.clearRect(0, 0, canvas.width, canvas.height);
+		ctx.fillStyle="#000000";
+		ctx.fillRect(0, 0, canvas.width, canvas.height);
+		ctx.font = "20px Arial";
+		ctx.fillStyle= GREEN_COLOR;
+		ctx.fillText("Health: " + String(ship.health), 5, 20);
+		ctx.fillText("Score: " + String(score), 5, canvas.height - 10);
+		ship.draw();
+		var draw = function(x) { x.draw(); };
+		bullets.forEach(draw);
+		asteroids.forEach(draw);
+	}
 };
 
 run();
