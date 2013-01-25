@@ -13,9 +13,14 @@ var ctx = canvas.getContext("2d");
 
 var MAX_HEALTH = 100;
 var SHIP_IMAGE = "ship.png";
+var SHIP_IMAGE_75;
+var SHIP_IMAGE_50;
+var SHIP_IMAGE_25;
+var SHIP_IMAGE_0;
+var SHIP_IMAGE_MOVING;
 var SHIP_WIDTH = 91;
 var SHIP_HEIGHT = 65;
-var ASTEROID_IMAGE = "asteroid.png";
+var ASTEROID_IMAGE = "asteroid1.png";
 var PERIOD = 50; // how many ms to wait between calls to mainLoop.
 var ACCELERATION = 0.5;
 var TURN_SPEED = 0.2; // radians/period when holding left or right
@@ -28,6 +33,7 @@ var ASTEROID_SPEED = 5.0;
 var ASTEROID_RADIUS = 10.0;
 var MAX_BULLETS = 10;
 var GREEN_COLOR = "#7FFF00";
+var SPACE_BACKGROUND = "spaceBackground.jpg";
 
 var SPACE = 32;
 var LEFT = 37;
@@ -87,9 +93,6 @@ function Ship(x, y, w, h, vx, vy, direction) {
  
         /////////// shoot bullets ////////////
         if (keyPressed(SPACE) && bullets.length < MAX_BULLETS) {
-			var vect = unitVector(Math.PI + (Math.PI/2));
-			console.log(String(vect[0]));
-			console.log(String(vect[1]));
             dir = unitVector(this.direction);
             vx = dir[0] * BULLET_SPEED;
             vy = dir[1] * BULLET_SPEED;
@@ -114,14 +117,6 @@ function Ship(x, y, w, h, vx, vy, direction) {
 
 };
 
-function GameOver() // also possible to do a constant variable GAME_OVER
-{
-	clearInterval(intervalID);
-	ctx.font = "20px Arial";
-	ctx.fillText("GAME OVER", 166, 200);
-	console.log("Game over");
-}
-
 function UpdateHealth(ship)
 {
 	ship.health--;
@@ -140,6 +135,8 @@ function Asteroid(x, y, vx, vy, radius) {
     this.vx = vx;
     this.vy = vy;
     this.radius = radius;
+	this.img = new Image();
+	this.img.src = ASTEROID_IMAGE;
     this.update = function() {
         var i;
         this.x = modulo(this.x + this.vx, canvas.width);
@@ -150,8 +147,7 @@ function Asteroid(x, y, vx, vy, radius) {
         }
     };
     this.draw = function() {
-        ctx.fillStyle = "brown";
-        drawCircle(this.x, this.y, this.radius);
+        ctx.drawImage(this.img, this.x, this.y, SHIP_WIDTH/2, SHIP_WIDTH/2);
     };
 };
 
@@ -253,6 +249,9 @@ function drawAll() {
 		ctx.clearRect(0, 0, canvas.width, canvas.height);
 		ctx.fillStyle="#000000";
 		ctx.fillRect(0, 0, canvas.width, canvas.height);
+		//var img = new Image();
+		//img.src = SPACE_BACKGROUND;
+		//ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
 		ctx.font = "20px Arial";
 		ctx.fillStyle= GREEN_COLOR;
 		ctx.fillText("Health: " + String(ship.health), 5, 20);
