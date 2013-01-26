@@ -21,11 +21,12 @@ var SHIP_IMAGE_MOVING;
 var SHIP_WIDTH = 91;
 var SHIP_HEIGHT = 65;
 var ASTEROID_IMAGE = "asteroid.png";
+var ASTEROID_IMAGE2 = "asteroid2.png";
 var PERIOD = 50; // how many ms to wait between calls to mainLoop.
 var ACCELERATION = 0.5;
 var TURN_SPEED = 0.2; // radians/period when holding left or right
 var BULLET_SPEED = 8.0;
-var BULLET_RADIUS = 5.0;
+var BULLET_RADIUS = 2.0;
 var BULLET_LIFESPAN = 5000; // how long a bullet lasts before disappearing
 var FRICTION = 0.15;
 var ASTEROID_PERIOD = 2000; // how long to wait between asteroid creations
@@ -115,8 +116,8 @@ function Ship(x, y, w, h, vx, vy, direction) {
 		//ctx.translate(Math.floor(ship.x), Math.floor(ship.y));
 		ctx.translate(midx, midy);
         ctx.rotate(ship.direction);
-		console.log("x: " + String(midx));
-		console.log("y: " + String(midy));
+		//console.log("x: " + String(midx));
+		//console.log("y: " + String(midy));
         ctx.drawImage(this.img, 0, 0, SHIP_WIDTH, SHIP_HEIGHT);
         ctx.restore();
     };
@@ -142,7 +143,10 @@ function Asteroid(x, y, vx, vy, radius) {
     this.vy = vy;
     this.radius = radius;
 	this.img = new Image();
-	this.img.src = ASTEROID_IMAGE;
+	var rando = Math.floor(Math.random()+1.5);
+	if (rando === 1) { this.img.src = ASTEROID_IMAGE; }
+	else {this.img.src = ASTEROID_IMAGE2; }
+	
     this.update = function() {
         var i;
         this.x = modulo(this.x + this.vx, canvas.width);
