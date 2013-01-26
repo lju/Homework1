@@ -20,7 +20,7 @@ var SHIP_IMAGE_0;
 var SHIP_IMAGE_MOVING;
 var SHIP_WIDTH = 91;
 var SHIP_HEIGHT = 65;
-var ASTEROID_IMAGE = "asteroid1.png";
+var ASTEROID_IMAGE = "asteroid.png";
 var PERIOD = 50; // how many ms to wait between calls to mainLoop.
 var ACCELERATION = 0.5;
 var TURN_SPEED = 0.2; // radians/period when holding left or right
@@ -31,9 +31,8 @@ var FRICTION = 0.15;
 var ASTEROID_PERIOD = 2000; // how long to wait between asteroid creations
 var ASTEROID_SPEED = 5.0;
 var ASTEROID_RADIUS = 10.0;
-var MAX_BULLETS = 10;
+var MAX_BULLETS = 100;
 var GREEN_COLOR = "#7FFF00";
-var SPACE_BACKGROUND = "spaceBackground.jpg";
 
 var SPACE = 32;
 var LEFT = 37;
@@ -99,7 +98,7 @@ function Ship(x, y, w, h, vx, vy, direction) {
 			var dir_to_shoot = unitVector(this.direction + (Math.PI/2));
 			var new_x = this.x + ((this.h/2) * dir_to_shoot[0]);
 			var new_y = this.y + ((this.h/2) * dir_to_shoot[1]);
-            bullets.push(new Bullet(new_x + (this.w * dir[0]), new_y + (this.h * dir[1]),
+            bullets.push(new Bullet(new_x + (this.w/2 * dir[0]), new_y + (this.h/2 * dir[1]),
                                     this.vx + vx, this.vy + vy,
                                     BULLET_RADIUS));
         }
@@ -109,8 +108,15 @@ function Ship(x, y, w, h, vx, vy, direction) {
         // TODO: x, y are center, not top-left
         ctx.save();
         //ctx.translate(ship.x/2, ship.y/2);
-		ctx.translate(Math.floor(ship.x), Math.floor(ship.y));
+        //ctx.drawImage(this.img, 0, 0, SHIP_WIDTH, SHIP_HEIGHT);
+		var midVec = unitVector(ship.direction);
+		var midx = (ship.x - (ship.h/2 * midVec[0]));
+		var midy = (ship.y - (ship.w/2 * (midVec[1])));
+		//ctx.translate(Math.floor(ship.x), Math.floor(ship.y));
+		ctx.translate(midx, midy);
         ctx.rotate(ship.direction);
+		console.log("x: " + String(midx));
+		console.log("y: " + String(midy));
         ctx.drawImage(this.img, 0, 0, SHIP_WIDTH, SHIP_HEIGHT);
         ctx.restore();
     };
@@ -249,9 +255,6 @@ function drawAll() {
 		ctx.clearRect(0, 0, canvas.width, canvas.height);
 		ctx.fillStyle="#000000";
 		ctx.fillRect(0, 0, canvas.width, canvas.height);
-		//var img = new Image();
-		//img.src = SPACE_BACKGROUND;
-		//ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
 		ctx.font = "20px Arial";
 		ctx.fillStyle= GREEN_COLOR;
 		ctx.fillText("Health: " + String(ship.health), 5, 20);
