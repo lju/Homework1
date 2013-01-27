@@ -26,7 +26,7 @@ var PERIOD = 50; // how many ms to wait between calls to mainLoop.
 var ACCELERATION = 0.5;
 var TURN_SPEED = 0.2; // radians/period when holding left or right
 var BULLET_SPEED = 8.0;
-var BULLET_RADIUS = 2.0;
+var BULLET_RADIUS = 5.0;
 var BULLET_LIFESPAN = 5000; // how long a bullet lasts before disappearing
 var FRICTION = 0.15;
 var ASTEROID_PERIOD = 2000; // how long to wait between asteroid creations
@@ -34,6 +34,7 @@ var ASTEROID_SPEED = 5.0;
 var ASTEROID_RADIUS = 10.0;
 var MAX_BULLETS = 100;
 var GREEN_COLOR = "#7FFF00";
+var SPACE_BACKGROUND = "spaceBackground.png";
 
 var SPACE = 32;
 var LEFT = 37;
@@ -97,11 +98,9 @@ function Ship(x, y, w, h, vx, vy, direction) {
             vx = dir[0] * BULLET_SPEED;
             vy = dir[1] * BULLET_SPEED;
 			var dir_to_shoot = unitVector(this.direction + (Math.PI/2));
-			var new_x = this.x + ((this.h/2) * dir_to_shoot[0]);
-			var new_y = this.y + ((this.h/2) * dir_to_shoot[1]);
-            bullets.push(new Bullet(new_x + (this.w/2 * dir[0]), new_y + (this.h/2 * dir[1]),
-                                    this.vx + vx, this.vy + vy,
-                                    BULLET_RADIUS));
+			var new_x = this.x + ((this.h/2) * dir_to_shoot[0]) + (this.w/2 * dir[0]);
+			var new_y = this.y + ((this.h/2) * dir_to_shoot[1]) + (this.h/2 * dir[1]);
+            bullets.push(new Bullet(new_x, new_y, this.vx + vx, this.vy + vy, BULLET_RADIUS));
         }
     };
 
@@ -257,8 +256,11 @@ function drawAll() {
 	else
 	{
 		ctx.clearRect(0, 0, canvas.width, canvas.height);
-		ctx.fillStyle="#000000";
-		ctx.fillRect(0, 0, canvas.width, canvas.height);
+		//ctx.fillStyle="#000000";
+		//ctx.fillRect(0, 0, canvas.width, canvas.height);
+		var backgroundIMG = new Image();
+		backgroundIMG.src = SPACE_BACKGROUND;
+		ctx.drawImage(backgroundIMG, 0, 0, canvas.width, canvas.height);
 		ctx.font = "20px Arial";
 		ctx.fillStyle= GREEN_COLOR;
 		ctx.fillText("Health: " + String(ship.health), 5, 20);
