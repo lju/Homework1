@@ -14,7 +14,11 @@ function Ship(x, y, radius, vx, vy, direction) {
     this.lastDisplayed = true;
 
     this.img = new Image();
-    this.img.src = SHIP_IMAGE;
+	this.img2 = new Image();
+	this.imgTemp = new Image();
+	this.img.src = SHIP_IMAGE;
+	this.imgTemp = this.img;
+	this.img2.src = SHIP_MOVING;
 
     this.update = function() {
         /////////// position ////////////
@@ -30,10 +34,23 @@ function Ship(x, y, radius, vx, vy, direction) {
         scale = 0;
         if (keyPressed(UP)) {
             scale += ACCELERATION;
+			shipMoving = true;
         }
         if (keyPressed(DOWN)) {
             scale -= ACCELERATION;
+			shipMoving = true;
         }
+		
+		if (shipMoving) {
+			//this.img.src = SHIP_MOVING;
+			this.img = this.img2;
+		}
+		
+		else
+		{
+			this.img = this.imgTemp;
+		}
+		
         dir = unitVector(this.direction);
         ax = dir[0] * scale;
         ay = dir[1] * scale;
@@ -64,6 +81,8 @@ function Ship(x, y, radius, vx, vy, direction) {
             bullets.push(new Bullet(newX, newY,
                                     this.vx+vx, this.vy+vy, BULLET_RADIUS));
         }
+		
+		shipMoving = false;
     };
 
     this.draw = function() {
@@ -80,7 +99,7 @@ function Ship(x, y, radius, vx, vy, direction) {
                 return;
             }
         }
-        drawRotated(this.img, this.x, this.y, SHIP_RADIUS*2, SHIP_RADIUS*2,
+        drawRotated(this.img, this.x, this.y, SHIP_RADIUS*7, SHIP_RADIUS*5,
                     this.direction);
     };
 
@@ -88,7 +107,7 @@ function Ship(x, y, radius, vx, vy, direction) {
     this.takeDamage = function(damage) {
         this.lastHit = getTime();
         this.health -= damage;
-        if (this.health <= 0) {
+        if (this.health < 0) { // fix
             gameOver = true;
         }
     }

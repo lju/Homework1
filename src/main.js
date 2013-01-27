@@ -11,6 +11,7 @@ var lastAsteroidSpawn = 0;
 var lastBulletFired = 0;
 var score = 0;
 var gameOver = false;
+var shipMoving = false;
 var backgroundImage = new Image();
 backgroundImage.src = BACKGROUND_IMAGE;
 
@@ -30,6 +31,10 @@ function mainLoop() {
     var i, newBullets, now, vec, newAsteroid;
     ship.update();
 
+	if (gameOver) {
+		clearInterval(intervalID);
+    }
+	
     now = getTime();
     var update = function(x) { x.update(); };
     bullets.forEach(update);
@@ -56,10 +61,6 @@ function mainLoop() {
         asteroids.push(newAsteroid);
     }
 
-    if (gameOver) {
-		clearInterval(intervalID);
-    }
-
     drawAll();
 };
 
@@ -68,14 +69,18 @@ function mainLoop() {
  * should be called here and only here! */
 function drawAll() {
 	if (gameOver) {
-
-		ctx.font = "20px Arial";
+		ctx.font = "20px Courier";
 		ctx.fillStyle = GREEN_COLOR;
-		ctx.fillText("GAME OVER", canvas.width/2 - 30, canvas.height/2);
+		var gameOverText = "GAME OVER";
+		var measure = ctx.measureText(gameOverText);
+		var gameOverWidth = measure.width;
+		console.log(String(gameOverWidth));
+		ctx.fillText(gameOverText, canvas.width/2 - (gameOverWidth/2), canvas.height/2);
 		console.log("Game over");
 
 	} else {
-
+		
+		//ctx.clearRect(0, 0, canvas.width, canvas.height);
 		ctx.drawImage(backgroundImage, 0, 0, canvas.width, canvas.height);
 
 		var draw = function(x) { x.draw(); };
@@ -84,9 +89,23 @@ function drawAll() {
 
 		ship.draw();
 
-		ctx.font = "20px Arial";
+		ctx.font = "10px Georgia";
 		ctx.fillStyle= GREEN_COLOR;
-		ctx.fillText("Health: " + String(Math.floor(ship.health)), 5, 20);
+		ctx.textBaseline = 'Top';
+		ctx.fillText("Health", 5, 23);
+		ctx.fillStyle = "grey";
+		ctx.fillRect(5, 5, 200, 10);
+		if (Math.floor(ship.health) >= 25)
+		{
+			ctx.fillStyle = GREEN_COLOR;
+		}
+		
+		else {
+			ctx.fillStyle = "red"; // I will make this more specific / prettier
+		}
+		ctx.fillRect(5, 5, (Math.floor(ship.health) * 2), 10);
+		//ctx.fillText("Health: " + String(Math.floor(ship.health)), 5, 20);
+		ctx.fillStyle = GREEN_COLOR;
 		ctx.fillText("Score: " + String(score), 5, canvas.height - 10);
 
 	}

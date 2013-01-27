@@ -6,19 +6,20 @@
 var DEBUG = false;
 
 var SHIP_IMAGE = "img/ship.png";
+var SHIP_MOVING = "img/shipMoving.png";
 var ASTEROID_IMAGE = "img/asteroid.png";
 var ASTEROID_IMAGE2 = "img/asteroid2.png";
 var BACKGROUND_IMAGE = "img/spaceBackground.png";
 
-var PERIOD = 50; // how many ms to wait between calls to mainLoop.
+var PERIOD = 40; // how many ms to wait between calls to mainLoop.
 
-var MAX_HEALTH = 100;
-var SHIP_RADIUS = 15;
-var ACCELERATION = 0.5;
-var TURN_SPEED = 0.2; // radians/tick when holding left or right
+var MAX_HEALTH = 10;
+var SHIP_RADIUS = 5;
+var ACCELERATION = 0.90;
+var TURN_SPEED = 0.1; // radians/tick when holding left or right
 
-var BULLET_SPEED = 8.0;
-var BULLET_RADIUS = 5.0;
+var BULLET_SPEED = 10.0;
+var BULLET_RADIUS = 3.0;
 var BULLET_LIFESPAN = 1000; // how long a bullet lasts before disappearing
 var BULLET_PERIOD = 300; // how long the user must wait between bullet shots
 var FRICTION = 0.15;
