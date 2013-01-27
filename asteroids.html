@@ -1,8 +1,28 @@
 <html>
-<canvas id="myCanvas" width="600" height="600"
-        style="border:1px solid #000000;">
-</canvas>
+  <canvas id="myCanvas" width="600" height="400"
+          style="border:1px solid #000000;">
+  </canvas>
+  <script src="src/constants.js"></script>
+  <script src="src/Ship.js"></script>
+  <script src="src/Asteroid.js"></script>
+  <script src="src/Bullet.js"></script>
+  <script src="src/keys.js"></script>
+  <script src="src/util.js"></script>
+  <script src="src/main.js"></script>
+
+
+<!--
+
 <script>
+
+     ____  _____ ____  ____      _    ____    _  _____ _____ ____
+    |  _ \| ____|  _ \|  _ \    / \  / ___|  / \|_   _| ____|  _ \
+    | | | |  _| | |_) | |_) |  / _ \| |     / _ \ | | |  _| | | | |
+    | |_| | |___|  __/|  _ <  / ___ \ |___ / ___ \| | | |___| |_| |
+    |____/|_____|_|   |_| \_\/_/   \_\____/_/   \_\_| |_____|____/
+
+                (use separate .js files above)
+
 
 var canvas = document.getElementById("myCanvas");
 var ctx = canvas.getContext("2d");
@@ -61,7 +81,7 @@ function Ship(x, y, w, h, vx, vy, direction) {
     this.update = function() {
         /////////// position ////////////
         var ax, ay, scale, vec, vx, vy, v, normVx, normVy;
-		
+
 		if (keyPressed(LEFT)) {
             this.direction -= TURN_SPEED;
         }
@@ -91,7 +111,7 @@ function Ship(x, y, w, h, vx, vy, direction) {
 
         this.x = modulo(this.x + this.vx, canvas.width);
         this.y = modulo(this.y + this.vy, canvas.height);
- 
+
         /////////// shoot bullets ////////////
         if (keyPressed(SPACE) && bullets.length < MAX_BULLETS) {
             dir = unitVector(this.direction);
@@ -126,12 +146,12 @@ function Ship(x, y, w, h, vx, vy, direction) {
 function UpdateHealth(ship)
 {
 	ship.health--;
-	
+
 	if (ship.health === 0)
 	{
 		game_over = true;
 	}
-	
+
 	drawAll();
 }
 
@@ -145,7 +165,7 @@ function Asteroid(x, y, vx, vy, radius) {
 	var rando = Math.floor(Math.random()+1.5);
 	if (rando === 1) { this.img.src = ASTEROID_IMAGE; }
 	else {this.img.src = ASTEROID_IMAGE2; }
-	
+
     this.update = function() {
         var i;
         this.x = modulo(this.x + this.vx, canvas.width);
@@ -207,7 +227,7 @@ function run() {
 function mainLoop() {
     var i, newBullets, now, vec, newAsteroid;
     ship.update();
-	
+
     // go through each bullet, updating and maybe appending to newBullets.
     // Basically, newBullets is a filter of bullets.
     newBullets = [];
@@ -252,7 +272,7 @@ function drawAll() {
 		ctx.fillText("GAME OVER", canvas.width/2 - 30, canvas.height/2);
 		console.log("Game over");
 	}
-    
+
 	else
 	{
 		ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -382,6 +402,7 @@ function collides(circle1, circle2) {
     return distance(circle1.x, circle1.y, circle2.x, circle2.y) <
         circle1.radius + circle2.radius;
 }
+                                                                   -->
 
 </script>
 </html>
