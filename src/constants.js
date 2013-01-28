@@ -13,7 +13,7 @@ var BACKGROUND_IMAGE = "img/spaceBackground.png";
 
 var PERIOD = 40; // how many ms to wait between calls to mainLoop.
 
-var MAX_HEALTH = 10;
+var MAX_HEALTH = 100;
 var SHIP_RADIUS = 5;
 var ACCELERATION = 0.90;
 var TURN_SPEED = 0.1; // radians/tick when holding left or right
