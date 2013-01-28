@@ -8,6 +8,7 @@ function Ship(x, y, radius, vx, vy, direction) {
     this.vy = vy;
     this.direction = direction; // direction in radians
     this.health = MAX_HEALTH;
+    this.isMoving = false;
 
     // used for getting hit
     this.lastHit = 0;
@@ -34,14 +35,14 @@ function Ship(x, y, radius, vx, vy, direction) {
         scale = 0;
         if (keyPressed(UP)) {
             scale += ACCELERATION;
-			shipMoving = true;
+			this.isMoving = true;
         }
         if (keyPressed(DOWN)) {
             scale -= ACCELERATION;
-			shipMoving = true;
+			this.isMoving = true;
         }
 
-		if (shipMoving) {
+		if (this.isMoving) {
 			//this.img.src = SHIP_MOVING;
 			this.img = this.img2;
 		}
@@ -64,8 +65,10 @@ function Ship(x, y, radius, vx, vy, direction) {
         this.vx += ax;
         this.vy += ay;
 
-        this.x = modulo(this.x + this.vx, canvas.width + OFFMAP_SIZE);
-        this.y = modulo(this.y + this.vy, canvas.height + OFFMAP_SIZE);
+        this.x += this.vx;
+        this.y += this.vy;
+        this.x = modIntoBounds(this.x, -OFFMAP_SIZE, canvas.width+OFFMAP_SIZE);
+        this.y = modIntoBounds(this.y, -OFFMAP_SIZE, canvas.height+OFFMAP_SIZE);
 
         /////////// shoot bullets ////////////
         if (keyPressed(SPACE) && bullets.length < MAX_BULLETS
@@ -82,7 +85,7 @@ function Ship(x, y, radius, vx, vy, direction) {
                                     this.vx+vx, this.vy+vy, BULLET_RADIUS));
         }
 
-		shipMoving = false;
+		this.isMoving = false;
     };
 
     this.draw = function() {

@@ -3,7 +3,7 @@
  * the place to do it. */
 
 
-var DEBUG = true;
+var DEBUG = false;
 
 var SHIP_IMAGE = "img/ship.png";
 var SHIP_MOVING = "img/shipMoving.png";

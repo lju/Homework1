@@ -107,3 +107,14 @@ function randomEdgeX() {
 function randomEdgeY() {
     return Math.random() >= 0.5 ? 0 : canvas.height + OFFMAP_SIZE;
 }
+
+/* modIntoBounds(3, 0, 10) === 3
+ * modIntoBounds(13, 0, 10) === 3
+ * modIntoBounds(13, -10, 10) === -7
+ * modIntoBounds(13, -10, 0) === -7
+ */
+
+function modIntoBounds(x, leftBound, rightBound) {
+    var range = rightBound - leftBound;
+    return modulo(x - leftBound, range) + leftBound;
+}

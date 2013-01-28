@@ -13,7 +13,6 @@ var lastAlienSpawn = 0;
 var lastBulletFired = 0;
 var score = 0;
 var gameOver = false;
-var shipMoving = false;
 var backgroundImage = new Image();
 backgroundImage.src = BACKGROUND_IMAGE;
 

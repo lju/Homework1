@@ -20,8 +20,12 @@ function Asteroid(x, y, vx, vy, radius) {
 	else {this.img.src = ASTEROID_IMAGE3; }
 
     this.update = function() {
-        this.x = modulo(this.x + this.vx, canvas.width + OFFMAP_SIZE);
-        this.y = modulo(this.y + this.vy, canvas.height + OFFMAP_SIZE);
+
+        this.x += this.vx;
+        this.y += this.vy;
+        this.x = modIntoBounds(this.x, -OFFMAP_SIZE, canvas.width+OFFMAP_SIZE);
+        this.y = modIntoBounds(this.y, -OFFMAP_SIZE, canvas.height+OFFMAP_SIZE);
+
         this.direction += this.rotationalVelocity;
         // do damage to ship
         if (collides(this, ship)) {
