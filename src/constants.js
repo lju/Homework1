@@ -14,7 +14,7 @@ var ASTEROID_IMAGE3 = "img/asteroid3.png";
 
 var BACKGROUND_IMAGE = "img/spaceBackground.png";
 
-var PERIOD = 1; // how many ms to wait between calls to mainLoop.
+var PERIOD = 40; // how many ms to wait between calls to mainLoop.
 
 var MAX_HEALTH = 100;
 var SHIP_RADIUS = 5;
