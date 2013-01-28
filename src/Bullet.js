@@ -20,6 +20,8 @@ function Bullet(x, y, vx, vy, radius) {
         var self = this; // fucking javascript won't let me pass "this" <-- hahah
         asteroids.forEach(function(asteroid) {
             if (collides(self, asteroid)) {
+				//console.log(String(Math.floor((1/asteroid.radius) * 100)));
+				score += (Math.floor((1/asteroid.radius) * 100)); // the smaller the bullet the more points
                 self.shouldPersist = false;
                 asteroid.hit();
             }

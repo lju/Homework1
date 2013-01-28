@@ -74,7 +74,6 @@ function drawAll() {
 		var gameOverText = "GAME OVER";
 		var measure = ctx.measureText(gameOverText);
 		var gameOverWidth = measure.width;
-		console.log(String(gameOverWidth));
 		ctx.fillText(gameOverText, canvas.width/2 - (gameOverWidth/2), canvas.height/2);
 		console.log("Game over");
 
@@ -89,12 +88,15 @@ function drawAll() {
 
 		ship.draw();
 
-		ctx.font = "10px Georgia";
+		ctx.font = "20px Georgia";
 		ctx.fillStyle= GREEN_COLOR;
-		ctx.textBaseline = 'Top';
-		ctx.fillText("Health", 5, 23);
+		//ctx.textBaseline = 'Top';
+		var healthText = "Health: ";
+		var healthMeasure = ctx.measureText(healthText);
+		var healthWidth = healthMeasure.width;
+		ctx.fillText(healthText, 5, 23);
 		ctx.fillStyle = "grey";
-		ctx.fillRect(5, 5, 200, 10);
+		ctx.fillRect(healthWidth+5, 12, 200, 10);
 		if (Math.floor(ship.health) >= 25)
 		{
 			ctx.fillStyle = GREEN_COLOR;
@@ -103,11 +105,15 @@ function drawAll() {
 		else {
 			ctx.fillStyle = "red"; // I will make this more specific / prettier
 		}
-		ctx.fillRect(5, 5, (Math.floor(ship.health) * 2), 10);
+		
+		ctx.fillRect(healthWidth+5, 12, (Math.floor(ship.health) * 2), 10);
 		//ctx.fillText("Health: " + String(Math.floor(ship.health)), 5, 20);
 		ctx.fillStyle = GREEN_COLOR;
-		ctx.fillText("Score: " + String(score), 5, canvas.height - 10);
-
+		ctx.font = "20px Georgia";
+		var scoreText = "Score: " + String(score);
+		var scoreMeasure = ctx.measureText(scoreText);
+		var scoreWidth = scoreMeasure.width;
+		ctx.fillText(scoreText, canvas.width - scoreWidth - 5, 20);
 	}
 }
 
