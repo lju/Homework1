@@ -95,3 +95,15 @@ function drawRotated(img, cx, cy, width, height, theta) {
                   Math.floor(width), Math.floor(height));
     ctx.restore();
 }
+
+/* Returns a random location along the border of the canvas. That is, either 0
+ * or canvas.width */
+function randomEdgeX() {
+    return Math.random() >= 0.5 ? 0 : canvas.width + OFFMAP_SIZE;
+}
+
+/* Returns a random location along the border of the canvas. That is, either 0
+ * or canvas.height */
+function randomEdgeY() {
+    return Math.random() >= 0.5 ? 0 : canvas.height + OFFMAP_SIZE;
+}

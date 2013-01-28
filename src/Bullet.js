@@ -18,14 +18,13 @@ function Bullet(x, y, vx, vy, radius) {
             this.shouldPersist = false;
         }
         var self = this; // fucking javascript won't let me pass "this" <-- hahah
-        asteroids.forEach(function(asteroid) {
-            if (collides(self, asteroid)) {
-				//console.log(String(Math.floor((1/asteroid.radius) * 100)));
-				score += (Math.floor((1/asteroid.radius) * 100)); // the smaller the bullet the more points
+        hazards.forEach(function(hazard) {
+            if (collides(self, hazard)) {
+                // the smaller the bullet the more points
+				score += (Math.floor((1/hazard.radius) * 100));
                 self.shouldPersist = false;
-                asteroid.hit();
+                hazard.hit();
             }
-            return !collides(self, asteroid);
         });
     };
     this.draw = function() {
