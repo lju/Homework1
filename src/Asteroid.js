@@ -13,10 +13,12 @@ function Asteroid(x, y, vx, vy, radius) {
     this.shouldPersist = true;
 
 	this.img = new Image();
-	var rando = Math.floor(Math.random()+1.5);
-	if (rando === 1) { this.img.src = ASTEROID_IMAGE; }
-	else {this.img.src = ASTEROID_IMAGE2; }
-
+	
+	var rando = Math.floor((Math.random()*3) + 1);
+	if (rando === 1) { this.img.src = ASTEROID_IMAGE1; }
+	else if (rando === 2) {this.img.src = ASTEROID_IMAGE2; }
+	else {this.img.src = ASTEROID_IMAGE3; }
+	
     this.update = function() {
         this.x = modulo(this.x + this.vx, canvas.width);
         this.y = modulo(this.y + this.vy, canvas.height);

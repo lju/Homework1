@@ -31,10 +31,11 @@ function mainLoop() {
     var i, newBullets, now, vec, newAsteroid;
     ship.update();
 
-	if (gameOver) {
-		clearInterval(intervalID);
-    }
+	//if (gameOver) {
+	//	clearInterval(intervalID);
+    //}
 	
+	//else {
     now = getTime();
     var update = function(x) { x.update(); };
     bullets.forEach(update);
@@ -60,7 +61,7 @@ function mainLoop() {
         } while (dist < ship.radius + 3*newAsteroid.radius);
         asteroids.push(newAsteroid);
     }
-
+	//}
     drawAll();
 };
 
@@ -68,13 +69,23 @@ function mainLoop() {
 /* This is the place where everything is drawn from. Every drawFoo() function
  * should be called here and only here! */
 function drawAll() {
+	ctx.font = "20px Courier";
+	ctx.fillStyle = GREEN_COLOR;
+	var scoreText = "Score: " + String(score);
+	console.log(scoreText);
+	var scoreMeasure = ctx.measureText(scoreText);
+	var scoreWidth = scoreMeasure.width;
+	//var scoreHeight = scoreMeasure.height;
+	
 	if (gameOver) {
+		clearInterval(intervalID);
 		ctx.font = "20px Courier";
 		ctx.fillStyle = GREEN_COLOR;
 		var gameOverText = "GAME OVER";
 		var measure = ctx.measureText(gameOverText);
 		var gameOverWidth = measure.width;
-		ctx.fillText(gameOverText, canvas.width/2 - (gameOverWidth/2), canvas.height/2);
+		ctx.fillText(gameOverText, canvas.width/2 - (gameOverWidth/2), canvas.height/2 - 10);
+		ctx.fillText(scoreText, canvas.width/2 - (scoreWidth/2), canvas.height/2 + 15);
 		console.log("Game over");
 
 	} else {
@@ -110,9 +121,6 @@ function drawAll() {
 		//ctx.fillText("Health: " + String(Math.floor(ship.health)), 5, 20);
 		ctx.fillStyle = GREEN_COLOR;
 		ctx.font = "20px Georgia";
-		var scoreText = "Score: " + String(score);
-		var scoreMeasure = ctx.measureText(scoreText);
-		var scoreWidth = scoreMeasure.width;
 		ctx.fillText(scoreText, canvas.width - scoreWidth - 5, 20);
 	}
 }
