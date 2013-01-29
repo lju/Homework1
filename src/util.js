@@ -127,6 +127,8 @@ function max(x, y) {
     return x >= y ? x : y;
 }
 
+/* draw the health. This isn't in Ship.draw because if you had multiple ships,
+ * they would all overlap. */
 function drawHealth() {
     ctx.font = "20px Courier";
     ctx.fillStyle= GREEN_COLOR;
@@ -144,7 +146,7 @@ function drawHealth() {
     } else {
         ctx.fillStyle = "red"; // I will make this more specific / prettier
     }
-    ctx.fillStyle = GREEN_COLOR;
+    ctx.fillStyle = SHIP_HEALTH_COLOR;
     var percentageFull = ship.health / MAX_HEALTH;
     percentageFull = max(0.0, percentageFull);
     ctx.fillRect(healthWidth+5, 12,

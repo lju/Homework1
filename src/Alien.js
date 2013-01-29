@@ -5,6 +5,8 @@ function Alien(x, y, radius) {
     this.y = y;
     this.radius = radius;
     this.shouldPersist = true;
+    this.health = ALIEN_MAX_HEALTH;
+
     this.img = new Image();
     this.img.src = ALIEN_IMAGE;
 
@@ -23,14 +25,16 @@ function Alien(x, y, radius) {
     }
 
     this.hit = function() {
-        this.shouldPersist = false;
+        this.health--;
+        if (this.health <= 0) {
+            this.shouldPersist = false;
+        }
     }
 
     this.draw = function() {
-        var x, y, r;
-        x = Math.floor(this.x);
-        y = Math.floor(this.y);
-        r = Math.floor(this.radius);
+        var x = Math.floor(this.x);
+        var y = Math.floor(this.y);
+        var r = Math.floor(this.radius);
         ctx.drawImage(this.img, x-r, y-r, 2*r, 2*r);
     }
 }

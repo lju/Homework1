@@ -7,6 +7,7 @@ var ctx = canvas.getContext("2d");
 var ship; // = new Ship(100, 100, SHIP_RADIUS, 1, 1, 0);
 var bullets; //  = [];
 // hazard = asteroids, aliens, etc.
+<<<<<<< HEAD
 var hazards; //  = [];
 var lastAsteroidSpawn; //  = 0;
 var lastAlienSpawn; //  = 0;
@@ -16,6 +17,16 @@ var gameOver; //  = false;
 var isPaused; //  = false;
 var backgroundImage  = new Image();
 var intervalID;
+=======
+// var hazards = [new Kosbie(300, 50)];
+var hazards = [];
+var lastAsteroidSpawn = 0;
+var lastAlienSpawn = 0;
+var lastBulletFired = 0;
+var score = 0;
+var gameOver = false;
+var backgroundImage = new Image();
+>>>>>>> 5b468ffddf9e6e8e55e20185e36b833c16941cfd
 backgroundImage.src = BACKGROUND_IMAGE;
 
 function newGame()
@@ -92,12 +103,12 @@ function mainLoop() {
         lastAsteroidSpawn = now;
         // make a new asteroid, randomly, but not colliding with ship
         do {
-            vec = unitVector(Math.random());
+            vec = unitVector(Math.random()*2*Math.PI);
             newAsteroid = new Asteroid(
                 randomEdgeX(),
                 randomEdgeY(),
-                vec[0] * ASTEROID_SPEED * (Math.random()*2-1),
-                vec[1] * ASTEROID_SPEED * (Math.random()*2-1),
+                vec[0] * ASTEROID_SPEED * Math.random(),
+                vec[1] * ASTEROID_SPEED * Math.random(),
                 Math.random()*ASTEROID_RADIUS);
             var dist = distance(ship.x, ship.y, newAsteroid.x, newAsteroid.y);
         } while (dist < ship.radius + 3*newAsteroid.radius);
@@ -131,7 +142,16 @@ function drawAll() {
     //var scoreHeight = scoreMeasure.height;
 
     if (gameOver) {
+<<<<<<< HEAD
         //clearInterval(intervalID);
+=======
+
+        drawHealth();
+
+        // stop loop from running
+        clearInterval(intervalID);
+        ctx.fillStyle = GREEN_COLOR;
+>>>>>>> 5b468ffddf9e6e8e55e20185e36b833c16941cfd
 		ctx.font = "40px Courier";
 		
 		// measure game over text
