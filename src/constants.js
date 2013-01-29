@@ -29,21 +29,37 @@ var BULLET_PERIOD = 200; // how long the user must wait between bullet shots
 var FRICTION = 0.15;
 var MAX_BULLETS = 100;
 
-var ASTEROID_PERIOD = 2000; // how long to wait between asteroid creations
-var ASTEROID_SPEED = 8.0;
-var ASTEROID_RADIUS = 60.0;
-var ASTEROID_ROTATIONAL_VELOCITY = 0.2; // max spinning speed in radians/tick
-var ASTEROID_DAMAGE = 0.03;
+var ASTEROID_PERIOD; // = 2000; // how long to wait between asteroid creations
+var ASTEROID_SPEED; // = 8.0;
+var ASTEROID_RADIUS; // = 60.0;
+var ASTEROID_ROTATIONAL_VELOCITY; // = 0.2; // max spinning speed in radians/tick
+var ASTEROID_DAMAGE; // = 0.03;
 
-var ASTEROID_MIN_RADIUS = 10.0; // smallest radius that still allows splitting
-var ASTEROID_SPLIT_SCALEDOWN = 0.5; // child asteroids are this * parent size
-var ASTEROID_SPLIT_CHILDREN = 2; // how many asteroids are spawned when split
-var ASTEROID_SPLIT_SPEED = 3.0; // how fast child asteroids move, at max
+var ASTEROID_MIN_RADIUS; // = 10.0; // smallest radius that still allows splitting
+var ASTEROID_SPLIT_SCALEDOWN; // = 0.5; // child asteroids are this * parent size
+var ASTEROID_SPLIT_CHILDREN; // = 2; // how many asteroids are spawned when split
+var ASTEROID_SPLIT_SPEED; // = 3.0; // how fast child asteroids move, at max
 
-var ALIEN_SPEED = 3.0; // pixels/tick the alien moves
-var ALIEN_RADIUS = 30.0;
-var ALIEN_DAMAGE = 0.05;
-var ALIEN_PERIOD = 10000;
+var ALIEN_SPEED; // = 3.0; // pixels/tick the alien moves
+var ALIEN_RADIUS; // = 30.0;
+var ALIEN_DAMAGE; // = 0.05;
+var ALIEN_PERIOD; // = 10000;
+
+// var ASTEROID_PERIOD = 2000; // how long to wait between asteroid creations
+// var ASTEROID_SPEED = 8.0;
+// var ASTEROID_RADIUS = 60.0;
+// var ASTEROID_ROTATIONAL_VELOCITY = 0.2; // max spinning speed in radians/tick
+// var ASTEROID_DAMAGE = 0.03;
+
+// var ASTEROID_MIN_RADIUS = 10.0; // smallest radius that still allows splitting
+// var ASTEROID_SPLIT_SCALEDOWN = 0.5; // child asteroids are this * parent size
+// var ASTEROID_SPLIT_CHILDREN = 2; // how many asteroids are spawned when split
+// var ASTEROID_SPLIT_SPEED = 3.0; // how fast child asteroids move, at max
+
+// var ALIEN_SPEED = 3.0; // pixels/tick the alien moves
+// var ALIEN_RADIUS = 30.0;
+// var ALIEN_DAMAGE = 0.05;
+// var ALIEN_PERIOD = 10000;
 
 var GREEN_COLOR = "#7FFF00";
 
@@ -54,12 +70,21 @@ function SET_CONSTANTS(currentGameState)
 			//drawInitialGameState();
 			//break;
 		case 1:
-			ASTEROID_PERIOD = 2000;
+			ASTEROID_PERIOD = 2000; // how long to wait between asteroid creations
 			ASTEROID_SPEED = 3.0;
-			ASTEROID_MIN_RADIUS = 40.0;
-			ASTEROID_SPLIT_SPEED = 3.0;
-			ALIEN_PERIOD = 100000000; // aliens off?
-			ALIEN_SPEED = 0.0;			
+			ASTEROID_RADIUS = 60.0;
+			ASTEROID_ROTATIONAL_VELOCITY = 0.2; // max spinning speed in radians/tick
+			ASTEROID_DAMAGE = 0.03;
+
+			ASTEROID_MIN_RADIUS = 40.0; // smallest radius that still allows splitting
+			ASTEROID_SPLIT_SCALEDOWN = 0.5; // child asteroids are this * parent size
+			ASTEROID_SPLIT_CHILDREN = 2; // how many asteroids are spawned when split
+			ASTEROID_SPLIT_SPEED = 3.0; // how fast child asteroids move, at max
+
+			ALIEN_SPEED = 0.5; // pixels/tick the alien moves
+			ALIEN_RADIUS = 30.0;
+			ALIEN_DAMAGE = 0.05;
+			ALIEN_PERIOD = 100000000;
 			break;
 		case 2:
 			ASTEROID_PERIOD = 2000;
@@ -101,3 +126,5 @@ var LEFT = 37;
 var UP = 38;
 var RIGHT = 39;
 var DOWN = 40;
+var P_KEY = 80;
+var R_KEY = 82;

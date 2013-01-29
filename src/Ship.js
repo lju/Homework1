@@ -33,6 +33,11 @@ function Ship(x, y, radius, vx, vy, direction) {
         /////////// position ////////////
         var ax, ay, scale, vec, vx, vy, v, normVx, normVy;
 
+		//if (keyPressed(P_KEY))
+		//{
+		//	pause();
+		//}
+	
 		if (keyPressed(LEFT)) {
             this.direction -= TURN_SPEED;
         }

@@ -4,25 +4,52 @@
 var canvas = document.getElementById("myCanvas");
 var ctx = canvas.getContext("2d");
 
-var ship = new Ship(100, 100, SHIP_RADIUS, 1, 1, 0);
-var bullets = [];
+var ship; // = new Ship(100, 100, SHIP_RADIUS, 1, 1, 0);
+var bullets; //  = [];
 // hazard = asteroids, aliens, etc.
-var hazards = [];
-var lastAsteroidSpawn = 0;
-var lastAlienSpawn = 0;
-var lastBulletFired = 0;
-var score = 0;
-var gameOver = false;
-var backgroundImage = new Image();
+var hazards; //  = [];
+var lastAsteroidSpawn; //  = 0;
+var lastAlienSpawn; //  = 0;
+var lastBulletFired; //  = 0;
+var score; //  = 0;
+var gameOver; //  = false;
+var isPaused; //  = false;
+var backgroundImage  = new Image();
+var intervalID;
 backgroundImage.src = BACKGROUND_IMAGE;
+
+function newGame()
+{
+	console.log("newGame being called");
+ship = new Ship(100, 100, SHIP_RADIUS, 1, 1, 0);
+bullets = [];
+// hazard = asteroids, aliens, etc.
+hazards = [];
+lastAsteroidSpawn = 0;
+lastAlienSpawn = 0;
+lastBulletFired = 0;
+score = 0;
+gameOver = false;
+isPaused = false;
+//var backgroundImage = new Image();
+//backgroundImage.src = BACKGROUND_IMAGE;
+}
 
 /* The function that starts it all. Do some basic startup garbage, call
  * mainLoop, and you're done. */
-function run() {
+function init() {
+	clearInterval(intervalID);
+	console.log("init being called");
+	newGame();
     canvas.addEventListener('keydown', onKeyDown, false);
     canvas.addEventListener('keyup', onKeyUp, false);
     canvas.setAttribute('tabindex','0');
     canvas.focus();
+	gameState = 1;
+	score = 0;
+	ship.health = MAX_HEALTH;
+	SET_CONSTANTS(gameState);
+	checkForKeysTimer();
     intervalID = setInterval(mainLoop, PERIOD);
 }
 
@@ -31,6 +58,17 @@ function run() {
 function mainLoop() {
     var i, newBullets, now, vec, newAsteroid;
     
+	//if (keyPressed(P_KEY)) // checks every 40 ms, where else can we put it?
+	//{
+	//	pause();
+	//}
+	//
+	//if (keyPressed(R_KEY))
+	//{
+	//	init();
+	//}
+	
+	if (!isPaused){
 	if (score < 50) { gameState = 1; }
 	else if (score >= 50 && score < 100) { gameState = 2; }
 	else if (score >= 100 && score < 150) { gameState = 3; }
@@ -77,6 +115,7 @@ function mainLoop() {
         } while (dist < ship.radius + 3*newAlien.radius);
         hazards.push(newAlien);
     }
+	}
     drawAll();
 };
 
@@ -92,7 +131,7 @@ function drawAll() {
     //var scoreHeight = scoreMeasure.height;
 
     if (gameOver) {
-        clearInterval(intervalID);
+        //clearInterval(intervalID);
 		ctx.font = "40px Courier";
 		
 		// measure game over text
@@ -110,8 +149,28 @@ function drawAll() {
 		ctx.font = "20px Courier";
         ctx.fillText(scoreText, canvas.width/2 - (scoreWidth/2), canvas.height/2 + 15);
         console.log("Game over");
-
-    } else {
+		
+		//if (keyPressed(R_KEY)) // because clear interval this function stops getting called
+		//{
+		//	init();
+		//}
+		
+		clearInterval(intervalID);
+    }
+	
+	else if (isPaused)
+	{
+		ctx.fillStyle = GREEN_COLOR;
+		ctx.font = "20px Courier";
+		var isPausedText = "PAUSED";
+        var isPausedMeasure = ctx.measureText(isPausedText);
+        var isPausedWidth = isPausedMeasure.width;
+		var isPausedTextPixelLeft = canvas.width/2 - (isPausedWidth/2);
+		var isPausedTextPixelTop = canvas.height/2 - 15;
+        ctx.fillText(isPausedText, isPausedTextPixelLeft, isPausedTextPixelTop);
+	}
+	
+	else {
 
         //ctx.clearRect(0, 0, canvas.width, canvas.height);
 		ctx.font = "20px Courier";
@@ -131,4 +190,4 @@ function drawAll() {
     }
 }
 
-run();
+init();

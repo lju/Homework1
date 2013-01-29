@@ -158,3 +158,38 @@ function drawHealth() {
         ctx.fillRect(healthWidth+5, 12, Math.floor(percentageFull*200), 10);
     }
 }
+
+// pauses/unpauses the game
+function pause()
+{
+	if (isPaused)
+	{
+		isPaused = false;
+		intervalID = setInterval(40, mainLoop);
+	}
+	
+	else
+	{
+		isPaused = true;
+		//clearInterval(intervalID);
+	}
+}
+
+function checkForKeys()
+{
+	if (keyPressed(P_KEY))
+	{
+		pause();
+	}
+	
+	if (keyPressed(R_KEY))
+	{
+		init();
+	}
+}
+
+function checkForKeysTimer()
+{
+	console.log("please?");
+	checkForKeysInterval = setInterval(checkForKeys, 1);
+}
