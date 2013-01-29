@@ -110,26 +110,8 @@ function drawAll() {
 
         ship.draw();
 
-        ctx.font = "20px Georgia";
-        ctx.fillStyle= GREEN_COLOR;
-        //ctx.textBaseline = 'Top';
-        var healthText = "Health: ";
-        var healthMeasure = ctx.measureText(healthText);
-        var healthWidth = healthMeasure.width;
-        ctx.fillText(healthText, 5, 23);
-        ctx.fillStyle = "grey";
-        ctx.fillRect(healthWidth+5, 12, 200, 10);
-        if (Math.floor(ship.health) >= 25)
-        {
-            ctx.fillStyle = GREEN_COLOR;
-        }
+        drawHealth();
 
-        else {
-            ctx.fillStyle = "red"; // I will make this more specific / prettier
-        }
-
-        ctx.fillRect(healthWidth+5, 12, (Math.floor(ship.health) * 2), 10);
-        //ctx.fillText("Health: " + String(Math.floor(ship.health)), 5, 20);
         ctx.fillStyle = GREEN_COLOR;
         ctx.font = "20px Georgia";
         ctx.fillText(scoreText, canvas.width - scoreWidth - 5, 20);

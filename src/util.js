@@ -118,3 +118,43 @@ function modIntoBounds(x, leftBound, rightBound) {
     var range = rightBound - leftBound;
     return modulo(x - leftBound, range) + leftBound;
 }
+
+function min(x, y) {
+    return x <= y ? x : y;
+}
+
+function max(x, y) {
+    return x >= y ? x : y;
+}
+
+function drawHealth() {
+    ctx.font = "20px Georgia";
+    ctx.fillStyle= GREEN_COLOR;
+    var healthText = "Health: ";
+    var healthMeasure = ctx.measureText(healthText);
+    var healthWidth = healthMeasure.width;
+    ctx.fillText(healthText, 5, 23);
+    // draw the grey background of the health bar
+    ctx.fillStyle = "grey";
+    ctx.fillRect(healthWidth+5, 12, 200, 10);
+
+    // draw the ship health
+    if (Math.floor(ship.health) >= 25) {
+        ctx.fillStyle = GREEN_COLOR;
+    } else {
+        ctx.fillStyle = "red"; // I will make this more specific / prettier
+    }
+    ctx.fillStyle = GREEN_COLOR;
+    var percentageFull = ship.health / MAX_HEALTH;
+    percentageFull = max(0.0, percentageFull);
+    ctx.fillRect(healthWidth+5, 12,
+                 Math.floor(percentageFull*200), 10);
+
+    // now draw all the shield on top of that (last shield to first shield)
+    for (var i = ship.shields.length-1; i >= 0; i--) {
+        percentageFull = ship.shields[i].health / ship.shields[i].maxHealth;
+        percentageFull = max(0.0, percentageFull);
+        ctx.fillStyle = ship.shields[i].color;
+        ctx.fillRect(healthWidth+5, 12, Math.floor(percentageFull*200), 10);
+    }
+}
