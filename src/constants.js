@@ -34,7 +34,6 @@ var BULLET_PERIOD = 200; // how long the user must wait between bullet shots
 var FRICTION = 0.15;
 var MAX_BULLETS = 100;
 
-<<<<<<< HEAD
 var ASTEROID_PERIOD; // = 2000; // how long to wait between asteroid creations
 var ASTEROID_SPEED; // = 8.0;
 var ASTEROID_RADIUS; // = 60.0;
@@ -66,25 +65,25 @@ var ALIEN_PERIOD; // = 10000;
 // var ALIEN_RADIUS = 30.0;
 // var ALIEN_DAMAGE = 0.05;
 // var ALIEN_PERIOD = 10000;
-=======
-var ASTEROID_PERIOD = 2000; // how long to wait between asteroid creations
-// var ASTEROID_PERIOD = 100000;
-var ASTEROID_SPEED = 8.0;
-var ASTEROID_RADIUS = 60.0;
-var ASTEROID_ROTATIONAL_VELOCITY = 0.2; // max spinning speed in radians/tick
-var ASTEROID_DAMAGE = 0.03;
 
-var ASTEROID_MIN_RADIUS = 10.0; // smallest radius that still allows splitting
-var ASTEROID_SPLIT_SCALEDOWN = 0.5; // child asteroids are this * parent size
-var ASTEROID_SPLIT_CHILDREN = 2; // how many asteroids are spawned when split
-var ASTEROID_SPLIT_SPEED = 3.0; // how fast child asteroids move, at max
+// var ASTEROID_PERIOD = 2000; // how long to wait between asteroid creations
+// // var ASTEROID_PERIOD = 100000;
+// var ASTEROID_SPEED = 8.0;
+// var ASTEROID_RADIUS = 60.0;
+// var ASTEROID_ROTATIONAL_VELOCITY = 0.2; // max spinning speed in radians/tick
+// var ASTEROID_DAMAGE = 0.03;
 
-var ALIEN_SPEED = 3.0; // pixels/tick the alien moves
-var ALIEN_RADIUS = 30.0;
-var ALIEN_DAMAGE = 0.05;
-var ALIEN_PERIOD = 10000;
+// var ASTEROID_MIN_RADIUS = 10.0; // smallest radius that still allows splitting
+// var ASTEROID_SPLIT_SCALEDOWN = 0.5; // child asteroids are this * parent size
+// var ASTEROID_SPLIT_CHILDREN = 2; // how many asteroids are spawned when split
+// var ASTEROID_SPLIT_SPEED = 3.0; // how fast child asteroids move, at max
+
+// var ALIEN_SPEED = 3.0; // pixels/tick the alien moves
+// var ALIEN_RADIUS = 30.0;
+// var ALIEN_DAMAGE = 0.05;
+// var ALIEN_PERIOD = 10000;
 // var ALIEN_PERIOD = 10000000;
-var ALIEN_MAX_HEALTH = 3; // number of bullets to kill an alien
+var ALIEN_MAX_HEALTH; // = 3; // number of bullets to kill an alien
 
 var KOSBIE_MAX_HEALTH = 10;
 var KOSBIE_PERIOD = 2000; // how often kosbie can attack
@@ -99,7 +98,6 @@ var LETTER_COLOR = "purple";
 var LETTER_RADIUS = 10.0; // you'll have to do some experiment to make
                           // this match up with the font
 var LETTER_DAMAGE = 0.1;
->>>>>>> 5b468ffddf9e6e8e55e20185e36b833c16941cfd
 
 var GREEN_COLOR = "#7FFF00";
 
@@ -125,6 +123,7 @@ function SET_CONSTANTS(currentGameState)
 			ALIEN_RADIUS = 30.0;
 			ALIEN_DAMAGE = 0.05;
 			ALIEN_PERIOD = 100000000;
+			ALIEN_MAX_HEALTH = 3; 
 			break;
 		case 2:
 			ASTEROID_PERIOD = 2000;
