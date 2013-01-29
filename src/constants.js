@@ -12,6 +12,7 @@ var ASTEROID_IMAGE2 = "img/asteroid2.png";
 var ASTEROID_IMAGE3 = "img/asteroid3.png";
 var ALIEN_IMAGE = "img/alien.png";
 var BACKGROUND_IMAGE = "img/spaceBackground.png";
+var INIT_SCREEN_IMAGE = "img/initScreen.png";
 var KOSBIE_IMAGE_OPEN = "img/kosbie-open.png";
 var KOSBIE_IMAGE_CLOSED = "img/kosbie-closed.png";
 
@@ -49,40 +50,6 @@ var ALIEN_SPEED; // = 3.0; // pixels/tick the alien moves
 var ALIEN_RADIUS; // = 30.0;
 var ALIEN_DAMAGE; // = 0.05;
 var ALIEN_PERIOD; // = 10000;
-
-// var ASTEROID_PERIOD = 2000; // how long to wait between asteroid creations
-// var ASTEROID_SPEED = 8.0;
-// var ASTEROID_RADIUS = 60.0;
-// var ASTEROID_ROTATIONAL_VELOCITY = 0.2; // max spinning speed in radians/tick
-// var ASTEROID_DAMAGE = 0.03;
-
-// var ASTEROID_MIN_RADIUS = 10.0; // smallest radius that still allows splitting
-// var ASTEROID_SPLIT_SCALEDOWN = 0.5; // child asteroids are this * parent size
-// var ASTEROID_SPLIT_CHILDREN = 2; // how many asteroids are spawned when split
-// var ASTEROID_SPLIT_SPEED = 3.0; // how fast child asteroids move, at max
-
-// var ALIEN_SPEED = 3.0; // pixels/tick the alien moves
-// var ALIEN_RADIUS = 30.0;
-// var ALIEN_DAMAGE = 0.05;
-// var ALIEN_PERIOD = 10000;
-
-// var ASTEROID_PERIOD = 2000; // how long to wait between asteroid creations
-// // var ASTEROID_PERIOD = 100000;
-// var ASTEROID_SPEED = 8.0;
-// var ASTEROID_RADIUS = 60.0;
-// var ASTEROID_ROTATIONAL_VELOCITY = 0.2; // max spinning speed in radians/tick
-// var ASTEROID_DAMAGE = 0.03;
-
-// var ASTEROID_MIN_RADIUS = 10.0; // smallest radius that still allows splitting
-// var ASTEROID_SPLIT_SCALEDOWN = 0.5; // child asteroids are this * parent size
-// var ASTEROID_SPLIT_CHILDREN = 2; // how many asteroids are spawned when split
-// var ASTEROID_SPLIT_SPEED = 3.0; // how fast child asteroids move, at max
-
-// var ALIEN_SPEED = 3.0; // pixels/tick the alien moves
-// var ALIEN_RADIUS = 30.0;
-// var ALIEN_DAMAGE = 0.05;
-// var ALIEN_PERIOD = 10000;
-// var ALIEN_PERIOD = 10000000;
 var ALIEN_MAX_HEALTH; // = 3; // number of bullets to kill an alien
 
 var KOSBIE_MAX_HEALTH = 10;
@@ -123,7 +90,7 @@ function SET_CONSTANTS(currentGameState)
 			ALIEN_RADIUS = 30.0;
 			ALIEN_DAMAGE = 0.05;
 			ALIEN_PERIOD = 100000000;
-			ALIEN_MAX_HEALTH = 3; 
+			ALIEN_MAX_HEALTH = 1; 
 			break;
 		case 2:
 			ASTEROID_PERIOD = 2000;
@@ -132,30 +99,34 @@ function SET_CONSTANTS(currentGameState)
 			ASTEROID_SPLIT_SPEED = 4.0;
 			ALIEN_PERIOD = 100000000; // aliens off?
 			ALIEN_SPEED = 0.0;
+			ALIEN_MAX_HEALTH = 1;
 			break;
 		case 3:
 			ASTEROID_PERIOD = 1500;
 			ASTEROID_SPEED = 9.0;
 			ASTEROID_MIN_RADIUS = 20.0;
 			ASTEROID_SPLIT_SPEED = 6.0;
-			ALIEN_PERIOD = 5000; // aliens off?
+			ALIEN_PERIOD = 5000;
 			ALIEN_SPEED = 2.0
+			ALIEN_MAX_HEALTH = 3;
 			break;
 		case 4:
 			ASTEROID_PERIOD = 1000;
 			ASTEROID_SPEED = 9.0;
 			ASTEROID_MIN_RADIUS = 20.0;
 			ASTEROID_SPLIT_SPEED = 4.0;
-			ALIEN_PERIOD = 3000; // aliens off?
+			ALIEN_PERIOD = 3000;
 			ALIEN_SPEED = 4.0
+			ALIEN_MAX_HEALTH = 3;
 			break;
 		case 5:
 			ASTEROID_PERIOD = 1000;
 			ASTEROID_SPEED = 9.0;
 			ASTEROID_MIN_RADIUS = 20.0;
 			ASTEROID_SPLIT_SPEED = 6.0;
-			ALIEN_PERIOD = 2000; // aliens off?
+			ALIEN_PERIOD = 2000;
 			ALIEN_SPEED = 8.0
+			ALIEN_MAX_HEALTH = 3;
 			break;
 	}
 }

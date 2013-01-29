@@ -186,12 +186,32 @@ function checkForKeys()
 	
 	if (keyPressed(R_KEY))
 	{
-		init();
+		newGame();
 	}
 }
 
 function checkForKeysTimer()
 {
-	console.log("please?");
 	checkForKeysInterval = setInterval(checkForKeys, 1);
+}
+
+function Button(left, top, width, height)
+{
+	this.left = left;
+	this.top = top;
+	this.width = width;
+	this.height = height;
+}
+
+function onClick(event)
+{
+	console.log(String(event));
+	if (!event){ console.log("click?");}
+	else {
+    var x = event.pageX - canvas.offsetLeft;  // do not use event.x, it's not cross-browser!!!
+    var y = event.pageY - canvas.offsetTop;
+    ctx.fillStyle = "red";
+    ctx.fillRect(x-25, y-25, 50, 50);
+	}
+	console.log("click");
 }

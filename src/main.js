@@ -4,6 +4,8 @@
 var canvas = document.getElementById("myCanvas");
 var ctx = canvas.getContext("2d");
 
+//canvas.addEventListener('onmousedown', onClick, false);
+
 var ship; // = new Ship(100, 100, SHIP_RADIUS, 1, 1, 0);
 var bullets; //  = [];
 // hazard = asteroids, aliens, etc.
@@ -14,7 +16,6 @@ var lastBulletFired; //  = 0;
 var score; //  = 0;
 var gameOver; //  = false;
 var isPaused; //  = false;
-var backgroundImage  = new Image();
 var intervalID;
 
 // var hazards = [new Kosbie(300, 50)];
@@ -27,29 +28,29 @@ var intervalID;
 var backgroundImage = new Image();
 backgroundImage.src = BACKGROUND_IMAGE;
 
-function newGame()
+function newGameVars()
 {
 	console.log("newGame being called");
-ship = new Ship(100, 100, SHIP_RADIUS, 1, 1, 0);
-bullets = [];
-// hazard = asteroids, aliens, etc.
-hazards = [];
-lastAsteroidSpawn = 0;
-lastAlienSpawn = 0;
-lastBulletFired = 0;
-score = 0;
-gameOver = false;
-isPaused = false;
-//var backgroundImage = new Image();
-//backgroundImage.src = BACKGROUND_IMAGE;
+	ship = new Ship(100, 100, SHIP_RADIUS, 1, 1, 0);
+	bullets = [];
+	// hazard = asteroids, aliens, etc.
+	hazards = [];
+	lastAsteroidSpawn = 0;
+	lastAlienSpawn = 0;
+	lastBulletFired = 0;
+	score = 0;
+	gameOver = false;
+	isPaused = false;
+	//var backgroundImage = new Image();
+	//backgroundImage.src = BACKGROUND_IMAGE;
 }
 
 /* The function that starts it all. Do some basic startup garbage, call
  * mainLoop, and you're done. */
-function init() {
+function newGame() {
 	clearInterval(intervalID);
 	console.log("init being called");
-	newGame();
+	newGameVars();
     canvas.addEventListener('keydown', onKeyDown, false);
     canvas.addEventListener('keyup', onKeyUp, false);
     canvas.setAttribute('tabindex','0');
@@ -78,52 +79,52 @@ function mainLoop() {
 	//}
 	
 	if (!isPaused){
-	if (score < 50) { gameState = 1; }
-	else if (score >= 50 && score < 100) { gameState = 2; }
-	else if (score >= 100 && score < 150) { gameState = 3; }
-	else if (score >= 150 && score < 200) { gameState = 4; }
-	else { gameState = 5; }
-	
-	SET_CONSTANTS(gameState);
-	
-	ship.update();
-    now = getTime();
-    var update = function(x) { x.update(); };
-    bullets.forEach(update);
-    hazards.forEach(update);
-    // delete old bullets
-    var shouldPersist = function(x) { return x.shouldPersist; };
-    bullets = bullets.filter(shouldPersist);
-    hazards = hazards.filter(shouldPersist);
+		if (score < 50) { gameState = 1; }
+		else if (score >= 50 && score < 100) { gameState = 2; }
+		else if (score >= 100 && score < 150) { gameState = 3; }
+		else if (score >= 150 && score < 200) { gameState = 4; }
+		else { gameState = 5; }
+		
+		SET_CONSTANTS(gameState);
+		
+		ship.update();
+		now = getTime();
+		var update = function(x) { x.update(); };
+		bullets.forEach(update);
+		hazards.forEach(update);
+		// delete old bullets
+		var shouldPersist = function(x) { return x.shouldPersist; };
+		bullets = bullets.filter(shouldPersist);
+		hazards = hazards.filter(shouldPersist);
 
-    // spawn a new asteroid
-    if (now - lastAsteroidSpawn > ASTEROID_PERIOD) {
-        lastAsteroidSpawn = now;
-        // make a new asteroid, randomly, but not colliding with ship
-        do {
-            vec = unitVector(Math.random()*2*Math.PI);
-            newAsteroid = new Asteroid(
-                randomEdgeX(),
-                randomEdgeY(),
-                vec[0] * ASTEROID_SPEED * Math.random(),
-                vec[1] * ASTEROID_SPEED * Math.random(),
-                Math.random()*ASTEROID_RADIUS);
-            var dist = distance(ship.x, ship.y, newAsteroid.x, newAsteroid.y);
-        } while (dist < ship.radius + 3*newAsteroid.radius);
-        hazards.push(newAsteroid);
-    }
+		// spawn a new asteroid
+		if (now - lastAsteroidSpawn > ASTEROID_PERIOD) {
+			lastAsteroidSpawn = now;
+			// make a new asteroid, randomly, but not colliding with ship
+			do {
+				vec = unitVector(Math.random()*2*Math.PI);
+				newAsteroid = new Asteroid(
+					randomEdgeX(),
+					randomEdgeY(),
+					vec[0] * ASTEROID_SPEED * Math.random(),
+					vec[1] * ASTEROID_SPEED * Math.random(),
+					Math.random()*ASTEROID_RADIUS);
+				var dist = distance(ship.x, ship.y, newAsteroid.x, newAsteroid.y);
+			} while (dist < ship.radius + 3*newAsteroid.radius);
+			hazards.push(newAsteroid);
+		}
 
-    // spawn a new alien
-    if (now - lastAlienSpawn > ALIEN_PERIOD) {
-        lastAlienSpawn = now;
-        do {
-            var newAlien = new Alien(randomEdgeX(),
-                                     randomEdgeY(),
-                                     ALIEN_RADIUS);
-            dist = distance(ship.x, ship.y, newAlien.x, newAlien.y);
-        } while (dist < ship.radius + 3*newAlien.radius);
-        hazards.push(newAlien);
-    }
+		// spawn a new alien
+		if (now - lastAlienSpawn > ALIEN_PERIOD) {
+			lastAlienSpawn = now;
+			do {
+				var newAlien = new Alien(randomEdgeX(),
+										 randomEdgeY(),
+										 ALIEN_RADIUS);
+				dist = distance(ship.x, ship.y, newAlien.x, newAlien.y);
+			} while (dist < ship.radius + 3*newAlien.radius);
+			hazards.push(newAlien);
+		}
 	}
     drawAll();
 };
@@ -187,7 +188,7 @@ function drawAll() {
 	
 	else {
 
-        //ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
 		ctx.font = "20px Courier";
         ctx.drawImage(backgroundImage, 0, 0, canvas.width, canvas.height);
 
@@ -201,8 +202,29 @@ function drawAll() {
 
         ctx.fillStyle = GREEN_COLOR;
         ctx.fillText(scoreText, canvas.width - scoreWidth - 5, 20);
-		ctx.fillText("Level: " + gameState, canvas.width - 100, canvas.height - 10);
+		ctx.fillText("Level: " + gameSrtate, canvas.width - 100, canvas.height - 10);
     }
 }
 
-init();
+function initState()
+{
+	ctx.fillStyle = "red";
+	button1 = new Button(canvas.width/2 - 50, canvas.height/2 - 40, 100, 40);
+	var button2 = new Button(canvas.width/2 - 50, canvas.height/2 + 40, 100, 40);
+	
+	ctx.fillRect(button1.left, button1.top, button1.width, button1.height);
+	ctx.fillRect(button2.left, button2.top, button2.width, button2.height);
+	canvas.addEventListener('onclick', onClick, false);
+	
+	button1.onclick = onClick(); //function() { console.log("button1"); newGame() };
+	button2.onclick = onClick(); //function() { console.log("button2"); newGame() };
+	console.log("should draw");
+	//ctx.fillStyle = "black";
+	//ctx.fillRect(0, 0, canvas.width, canvas.height);
+	var initScreen = new Image();
+	initScreen.src = INIT_SCREEN_IMAGE;
+	//ctx.drawImage(initScreen, 0, 0, canvas.width, canvas.height);
+	//newGame();
+}
+
+initState();
