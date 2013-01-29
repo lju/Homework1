@@ -130,7 +130,7 @@ function max(x, y) {
 /* draw the health. This isn't in Ship.draw because if you had multiple ships,
  * they would all overlap. */
 function drawHealth() {
-    ctx.font = "20px Georgia";
+    ctx.font = "20px Courier";
     ctx.fillStyle= GREEN_COLOR;
     var healthText = "Health: ";
     var healthMeasure = ctx.measureText(healthText);
