@@ -14,6 +14,14 @@ function Ship(x, y, radius, vx, vy, direction) {
     this.lastHit = 0;
     this.lastDisplayed = true;
 
+    // array of shield objects. Will be read/popped from left.
+    var self = this;
+    getX = function() { return this.x; }.bind(this);
+    getY = function() { return this.y; }.bind(this);
+    getR = function() { return this.radius; }.bind(this);
+    this.shields = [new Shield(100, "blue", getX, getY, getR),
+                    new Shield(50, "yellow", getX, getY, getR)];
+
     this.img = new Image();
 	this.img2 = new Image();
 	this.imgTemp = new Image();
@@ -102,16 +110,28 @@ function Ship(x, y, radius, vx, vy, direction) {
                 return;
             }
         }
+        if (this.shields.length > 0) {
+            this.shields[0].draw();
+        }
         drawRotated(this.img, this.x, this.y, SHIP_RADIUS*2, SHIP_RADIUS*2*0.7,
                     this.direction);
     };
 
     // what to call to inflict damage on the ship.
     this.takeDamage = function(damage) {
-        this.lastHit = getTime();
-        this.health -= damage;
-        if (this.health < 0) {
-            gameOver = true;
+        // try to make a shield take the damage instead
+        if (this.shields.length > 0) {
+            this.shields[0].takeDamage(damage);
+            // pop it off if it's empty
+            if (this.shields[0].health <= 0) {
+                this.shields.shift();
+            }
+        } else {
+            this.lastHit = getTime();
+            this.health -= damage;
+            if (this.health < 0) {
+                gameOver = true;
+            }
         }
     }
 }
