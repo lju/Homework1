@@ -128,7 +128,7 @@ function max(x, y) {
 }
 
 function drawHealth() {
-    ctx.font = "20px Georgia";
+    ctx.font = "20px Courier";
     ctx.fillStyle= GREEN_COLOR;
     var healthText = "Health: ";
     var healthMeasure = ctx.measureText(healthText);

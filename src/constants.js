@@ -2,7 +2,7 @@
  * change how fast the ship goes or really tweak any part of the game, here's
  * the place to do it. */
 
-
+var gameState = 1;
 var DEBUG = false;
 
 var SHIP_IMAGE = "img/ship.png";
@@ -46,6 +46,55 @@ var ALIEN_DAMAGE = 0.05;
 var ALIEN_PERIOD = 10000;
 
 var GREEN_COLOR = "#7FFF00";
+
+function SET_CONSTANTS(currentGameState)
+{
+	switch (currentGameState) {
+		//case 0:
+			//drawInitialGameState();
+			//break;
+		case 1:
+			ASTEROID_PERIOD = 2000;
+			ASTEROID_SPEED = 3.0;
+			ASTEROID_MIN_RADIUS = 40.0;
+			ASTEROID_SPLIT_SPEED = 3.0;
+			ALIEN_PERIOD = 100000000; // aliens off?
+			ALIEN_SPEED = 0.0;			
+			break;
+		case 2:
+			ASTEROID_PERIOD = 2000;
+			ASTEROID_SPEED = 6.0;
+			ASTEROID_MIN_RADIUS = 20.0;
+			ASTEROID_SPLIT_SPEED = 4.0;
+			ALIEN_PERIOD = 100000000; // aliens off?
+			ALIEN_SPEED = 0.0;
+			break;
+		case 3:
+			ASTEROID_PERIOD = 1500;
+			ASTEROID_SPEED = 9.0;
+			ASTEROID_MIN_RADIUS = 20.0;
+			ASTEROID_SPLIT_SPEED = 6.0;
+			ALIEN_PERIOD = 5000; // aliens off?
+			ALIEN_SPEED = 2.0
+			break;
+		case 4:
+			ASTEROID_PERIOD = 1000;
+			ASTEROID_SPEED = 9.0;
+			ASTEROID_MIN_RADIUS = 20.0;
+			ASTEROID_SPLIT_SPEED = 4.0;
+			ALIEN_PERIOD = 3000; // aliens off?
+			ALIEN_SPEED = 4.0
+			break;
+		case 5:
+			ASTEROID_PERIOD = 1000;
+			ASTEROID_SPEED = 9.0;
+			ASTEROID_MIN_RADIUS = 20.0;
+			ASTEROID_SPLIT_SPEED = 6.0;
+			ALIEN_PERIOD = 2000; // aliens off?
+			ALIEN_SPEED = 8.0
+			break;
+	}
+}
 
 var SPACE = 32;
 var LEFT = 37;

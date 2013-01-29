@@ -30,13 +30,16 @@ function run() {
  * draw everything. */
 function mainLoop() {
     var i, newBullets, now, vec, newAsteroid;
-    ship.update();
-
-    //if (gameOver) {
-    //  clearInterval(intervalID);
-    //}
-
-    //else {
+    
+	if (score < 50) { gameState = 1; }
+	else if (score >= 50 && score < 100) { gameState = 2; }
+	else if (score >= 100 && score < 150) { gameState = 3; }
+	else if (score >= 150 && score < 200) { gameState = 4; }
+	else { gameState = 5; }
+	
+	SET_CONSTANTS(gameState);
+	
+	ship.update();
     now = getTime();
     var update = function(x) { x.update(); };
     bullets.forEach(update);
@@ -90,18 +93,28 @@ function drawAll() {
 
     if (gameOver) {
         clearInterval(intervalID);
-        ctx.font = "20px Courier";
-        ctx.fillStyle = GREEN_COLOR;
+		ctx.font = "40px Courier";
+		
+		// measure game over text
         var gameOverText = "GAME OVER";
         var measure = ctx.measureText(gameOverText);
         var gameOverWidth = measure.width;
-        ctx.fillText(gameOverText, canvas.width/2 - (gameOverWidth/2), canvas.height/2 - 10);
+		var gameOverTextPixelLeft = canvas.width/2 - (gameOverWidth/2);
+		var gameOverTextPixelTop = canvas.height/2 - 30;
+		
+		// draw game over state
+        ctx.fillStyle = "black";
+		//ctx.fillRect(gameOverTextPixelLeft - 10, gameOverTextPixelTop - 10, 100, 100);
+        ctx.fillStyle = GREEN_COLOR;
+        ctx.fillText(gameOverText, gameOverTextPixelLeft, gameOverTextPixelTop);
+		ctx.font = "20px Courier";
         ctx.fillText(scoreText, canvas.width/2 - (scoreWidth/2), canvas.height/2 + 15);
         console.log("Game over");
 
     } else {
 
         //ctx.clearRect(0, 0, canvas.width, canvas.height);
+		ctx.font = "20px Courier";
         ctx.drawImage(backgroundImage, 0, 0, canvas.width, canvas.height);
 
         var draw = function(x) { x.draw(); };
@@ -113,8 +126,8 @@ function drawAll() {
         drawHealth();
 
         ctx.fillStyle = GREEN_COLOR;
-        ctx.font = "20px Georgia";
         ctx.fillText(scoreText, canvas.width - scoreWidth - 5, 20);
+		ctx.fillText("Level: " + gameState, canvas.width - 100, canvas.height - 10);
     }
 }
 
