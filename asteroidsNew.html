@@ -1,0 +1,382 @@
+<html>
+<canvas id="myCanvas" width="600" height="600"
+        style="border:1px solid #000000;">
+</canvas>
+<script>
+
+var canvas = document.getElementById("myCanvas");
+var ctx = canvas.getContext("2d");
+
+/*********************************/
+/* constants */
+/*********************************/
+
+var MAX_HEALTH = 100;
+var SHIP_IMAGE = "ship.png";
+var SHIP_IMAGE_75;
+var SHIP_IMAGE_50;
+var SHIP_IMAGE_25;
+var SHIP_IMAGE_0;
+var SHIP_IMAGE_MOVING;
+var SHIP_WIDTH = 70;
+var SHIP_HEIGHT = 50;
+var ASTEROID_IMAGE = "asteroid1.png";
+var PERIOD = 50; // how many ms to wait between calls to mainLoop.
+var ACCELERATION = 0.5;
+var TURN_SPEED = 0.2; // radians/period when holding left or right
+var BULLET_SPEED = 8.0;
+var BULLET_RADIUS = 5.0;
+var BULLET_LIFESPAN = 5000; // how long a bullet lasts before disappearing
+var FRICTION = 0.15;
+var ASTEROID_PERIOD = 2000; // how long to wait between asteroid creations
+var ASTEROID_SPEED = 5.0;
+var ASTEROID_RADIUS = 10.0;
+var MAX_BULLETS = 10;
+var GREEN_COLOR = "#7FFF00";
+var SPACE_BACKGROUND = "spaceBackground.jpg";
+
+var SPACE = 32;
+var LEFT = 37;
+var UP = 38;
+var RIGHT = 39;
+var DOWN = 40;
+
+/*********************************/
+/* objects */
+/*********************************/
+
+function Ship(x, y, w, h, vx, vy, direction) {
+    this.x = x;
+    this.y = y;
+	this.w = w;
+	this.h = h;
+    this.vx = vx;
+    this.vy = vy;
+    this.direction = direction; // direction in radians
+    this.health = MAX_HEALTH;
+    this.img = new Image();
+    this.img.src = SHIP_IMAGE;
+
+    this.update = function() {
+        /////////// position ////////////
+        var ax, ay, scale, vec, vx, vy, v, normVx, normVy;
+		
+		if (keyPressed(LEFT)) {
+            this.direction -= TURN_SPEED;
+        }
+        if (keyPressed(RIGHT)) {
+            this.direction += TURN_SPEED;
+        }
+        // accleration
+        scale = 0;
+        if (keyPressed(UP)) {
+            scale += ACCELERATION;
+        }
+        if (keyPressed(DOWN)) {
+            scale -= ACCELERATION;
+        }
+        dir = unitVector(this.direction);
+        ax = dir[0] * scale;
+        ay = dir[1] * scale;
+        // friction
+        v = Math.sqrt(this.vx*this.vx + this.vy*this.vy);
+        normVx = this.vx / v;
+        normVy = this.vy / v;
+        ax -= FRICTION * normVx;
+        ay -= FRICTION * normVy;
+
+        this.vx += ax;
+        this.vy += ay;
+
+        this.x = modulo(this.x + this.vx, canvas.width);
+        this.y = modulo(this.y + this.vy, canvas.height);
+ 
+        /////////// shoot bullets ////////////
+        if (keyPressed(SPACE) && bullets.length < MAX_BULLETS) {
+            dir = unitVector(this.direction);
+            vx = dir[0] * BULLET_SPEED;
+            vy = dir[1] * BULLET_SPEED;
+			var dir_to_shoot = unitVector(this.direction + (Math.PI/2));
+			var new_x = this.x + ((this.h/2) * dir_to_shoot[0]);
+			var new_y = this.y + ((this.h/2) * dir_to_shoot[1]);
+            bullets.push(new Bullet(new_x + (this.w * dir[0]), new_y + (this.h * dir[1]),
+                                    this.vx + vx, this.vy + vy,
+                                    BULLET_RADIUS));
+        }
+    };
+
+    this.draw = function() {
+        // TODO: x, y are center, not top-left
+        ctx.save();var dir_to_shoot = unitVector(this.direction + (Math.PI/2));
+		var new_x2 = this.x + ((this.h/2) * dir_to_shoot[0]);
+		var new_y2 = this.y + ((this.w/2) * dir_to_shoot[1]);
+        //ctx.translate(new_x2, new_y2);
+        //ctx.translate(ship.x/2, ship.y/2);
+        //ctx.translate(ship.x, ship.y);
+		ctx.translate(Math.floor(ship.x), Math.floor(ship.y));
+        ctx.rotate(ship.direction);
+        ctx.drawImage(this.img, 0, 0, SHIP_WIDTH, SHIP_HEIGHT);
+        ctx.restore();
+    };
+
+};
+
+function UpdateHealth(ship)
+{
+	ship.health--;
+	
+	if (ship.health === 0)
+	{
+		game_over = true;
+	}
+	
+	drawAll();
+}
+
+function Asteroid(x, y, vx, vy, radius) {
+    this.x = x;
+    this.y = y;
+    this.vx = vx;
+    this.vy = vy;
+    this.radius = radius;
+	this.img = new Image();
+	this.img.src = ASTEROID_IMAGE;
+    this.update = function() {
+        var i;
+        this.x = modulo(this.x + this.vx, canvas.width);
+        this.y = modulo(this.y + this.vy, canvas.height);
+        // game over
+        if (collides(this, ship)) {
+            UpdateHealth(ship);
+        }
+    };
+    this.draw = function() {
+        ctx.drawImage(this.img, this.x, this.y, SHIP_WIDTH/2, SHIP_WIDTH/2);
+    };
+};
+
+function Bullet(x, y, vx, vy, radius) {
+    this.x = x;
+    this.y = y;
+    this.vx = vx;
+    this.vy = vy;
+    this.radius = radius;
+    this.spawnTime = getTime();
+    this.update = function() {
+        this.x = modulo(this.x + this.vx, canvas.width);
+        this.y = modulo(this.y + this.vy, canvas.height);
+        var self = this; // fucking javascript won't let me pass "this" <-- hahah
+        asteroids = asteroids.filter(function(asteroid) {
+            return !collides(self, asteroid);
+        });
+    };
+    this.draw = function() {
+        ctx.fillStyle = "red";
+        drawCircle(this.x, this.y, this.radius);
+    };
+};
+
+/*********************************/
+/* setup */
+/*********************************/
+
+var ship = new Ship(100, 100, SHIP_WIDTH, SHIP_HEIGHT, 1, 1, 0);
+var bullets = [];
+var asteroids = [new Asteroid(200, 400, 1, 1, 10)];
+var lastAsteroidSpawn = 0;
+var score = 0;
+var game_over = false;
+
+/* The function that starts it all. Do some basic startup garbage, call
+ * mainLoop, and you're done. */
+function run() {
+    canvas.addEventListener('keydown', onKeyDown, false);
+    canvas.addEventListener('keyup', onKeyUp, false);
+    canvas.setAttribute('tabindex','0');
+    canvas.focus();
+    intervalID = setInterval(mainLoop, PERIOD);
+}
+
+/* This function is called to update everything: move the ship, kill things,
+ * draw everything. */
+function mainLoop() {
+    var i, newBullets, now, vec, newAsteroid;
+    ship.update();
+	
+    // go through each bullet, updating and maybe appending to newBullets.
+    // Basically, newBullets is a filter of bullets.
+    newBullets = [];
+    now = getTime();
+    var update = function(x) { x.update(); };
+    bullets.forEach(update);
+    asteroids.forEach(update);
+    // delete old bullets
+    bullets = bullets.filter(function(bullet) {
+        return now - bullet.spawnTime < BULLET_LIFESPAN;
+    });
+
+    // spawn a new asteroid
+    if (now - lastAsteroidSpawn > ASTEROID_PERIOD) {
+        lastAsteroidSpawn = now;
+        // make a new asteroid, randomly, but not colliding with ship
+        do {
+            vec = unitVector(Math.random());
+            newAsteroid = new Asteroid(
+                Math.random()*canvas.width,
+                Math.random()*canvas.height,
+                vec[0] * ASTEROID_SPEED * Math.random(),
+                vec[1] * ASTEROID_SPEED * Math.random(),
+                ASTEROID_RADIUS);
+            var dist = distance(ship.x, ship.y, newAsteroid.x, newAsteroid.y);
+        } while (dist < ship.radius + 3*newAsteroid.radius);
+        asteroids.push(newAsteroid);
+    }
+
+    drawAll();
+};
+
+
+/* This is the place where everything is drawn from. Every drawFoo() function
+ * should be called here and only here! */
+function drawAll() {
+	if (game_over)
+	{
+		clearInterval(intervalID);
+		ctx.font = "20px Arial";
+		ctx.fillStyle = GREEN_COLOR;
+		ctx.fillText("GAME OVER", canvas.width/2 - 30, canvas.height/2);
+		console.log("Game over");
+	}
+    
+	else
+	{
+		ctx.clearRect(0, 0, canvas.width, canvas.height);
+		ctx.fillStyle="#000000";
+		ctx.fillRect(0, 0, canvas.width, canvas.height);
+		//var img = new Image();
+		//img.src = SPACE_BACKGROUND;
+		//ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+		ctx.font = "20px Arial";
+		ctx.fillStyle= GREEN_COLOR;
+		ctx.fillText("Health: " + String(ship.health), 5, 20);
+		ctx.fillText("Score: " + String(score), 5, canvas.height - 10);
+		ship.draw();
+		var draw = function(x) { x.draw(); };
+		bullets.forEach(draw);
+		asteroids.forEach(draw);
+	}
+};
+
+run();
+
+
+
+/*********************************/
+/* keys */
+/*********************************/
+
+var keys = [];
+
+/* This is the only function you'll use to check if a key is currently
+ * pressed. */
+function keyPressed(keyCode) {
+    return keys[keyCode] === true;
+}
+
+function onKeyDown(event) {
+    keys[event.keyCode] = true;
+}
+
+function onKeyUp(event) {
+    delete keys[event.keyCode];
+}
+
+
+/*********************************/
+/* helper functions */
+/*********************************/
+
+/* returns a new theta that is the same angle, but
+ * 0 <= modulo(theta, x) < x
+ *
+ * modulo(120, 100) === 20
+ * modulo(-120, 100) === 80
+ * modulo(4.0, 1.3) === 0.1
+ *
+ * This is basically the same as the Python % operator.
+ */
+function modulo(theta, x) {
+    if (theta >= 0) {
+        return theta % x;
+    } else {
+        // negative mod doesn't do what we want, so we need to make it positive
+        // by adding a multiple of of 2*x.
+        var multiple = Math.abs(Math.floor(theta / x));
+        return (theta + (multiple*x)) % x;
+    }
+};
+
+/* Given a theta in radians, returns an [x, y] unit vector.
+ *
+ * unitVector(0.0) === [1.0, 0.0]
+ * unitVector(Math.PI/2) === [0.0, 1.0]
+ * unitVector(Math.PI/4) === [0.707, 0.707] // 1/sqrt(2)
+ *
+ */
+function unitVector(theta) {
+    theta = modulo(theta, Math.PI*2);
+    // quadrant 0, 1, 2, or 3, in counter-clockwise order
+    var quadrant = Math.floor(theta / (Math.PI/2));
+    var x, y;
+    //////////////// scary trig section //////////////////
+    switch (quadrant) {
+    case 0:
+        x = Math.cos(theta);
+        y = Math.sin(theta);
+        break;
+    case 1:
+        theta = Math.PI - theta;
+        x = -Math.cos(theta);
+        y = Math.sin(theta);
+        break;
+    case 2:
+        theta = theta - Math.PI;
+        x = -Math.cos(theta);
+        y = -Math.sin(theta);
+        break;
+    case 3:
+        theta = Math.PI*2 - theta;
+        x = Math.cos(theta);
+        y = -Math.sin(theta);
+        break;
+    }
+    return [x, y];
+};
+
+
+/* shamelessly copied from the course notes */
+function drawCircle(cx, cy, radius) {
+    ctx.beginPath();
+    ctx.arc(cx, cy, radius, 0, 2*Math.PI, false);
+    ctx.fill();
+}
+
+/* returns the unix time */
+function getTime() {
+    var d = new Date();
+    return d.getTime();
+}
+
+/* What is the distance between (x1,y1) and (x2, y2) */
+function distance(x1, y1, x2, y2) {
+    return Math.sqrt((x1-x2)*(x1-x2) + (y1-y2)*(y1-y2));
+};
+
+/* Are two circle-like object colliding? */
+function collides(circle1, circle2) {
+    return distance(circle1.x, circle1.y, circle2.x, circle2.y) <
+        circle1.radius + circle2.radius;
+}
+
+</script>
+</html>
