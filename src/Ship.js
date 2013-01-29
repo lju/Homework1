@@ -15,12 +15,15 @@ function Ship(x, y, radius, vx, vy, direction) {
     this.lastDisplayed = true;
 
     // array of shield objects. Will be read/popped from left.
-    var self = this;
     getX = function() { return this.x; }.bind(this);
     getY = function() { return this.y; }.bind(this);
     getR = function() { return this.radius; }.bind(this);
-    this.shields = [new Shield(100, "blue", getX, getY, getR),
-                    new Shield(50, "yellow", getX, getY, getR)];
+    this.shields = [];
+    for (var i = 0; i < SHIP_SHIELDS.length; i++) {
+        var health = SHIP_SHIELDS[i][0];
+        var color = SHIP_SHIELDS[i][1];
+        this.shields[i] = new Shield(health, color, getX, getY, getR);
+    }
 
     this.img = new Image();
 	this.img2 = new Image();
