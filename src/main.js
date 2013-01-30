@@ -163,7 +163,7 @@ function drawAll() {
         drawHealth();
 
         // draw "GAME OVER"
-        ctx.drawImage(gameOverImage, 0, 0, canvas.width, canvas.height);
+        ctx.drawImage(gameOverImage, 150, 25, 300, 350);
 
 		// draw "score: x"
         ctx.fillStyle = GREEN_COLOR;
