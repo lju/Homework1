@@ -12,6 +12,7 @@ var ASTEROID_IMAGE2 = "img/asteroid2.png";
 var ASTEROID_IMAGE3 = "img/asteroid3.png";
 var ALIEN_IMAGE = "img/alien.png";
 var BACKGROUND_IMAGE = "img/spaceBackground.png";
+var ABOUT_PAGE = "img/aboutPage.png";
 var INIT_SCREEN_IMAGE = "img/initScreen.png";
 var KOSBIE_IMAGE_OPEN = "img/kosbie-open.png";
 var KOSBIE_IMAGE_CLOSED = "img/kosbie-closed.png";
