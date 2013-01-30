@@ -8,7 +8,7 @@ function Kosbie(x, y) {
 
     this.shouldPersist = true;
 
-    this.lastFired = getTime();
+    this.lastFired = 0;
 
     this.imgOpen = new Image();
     this.imgOpen.src = KOSBIE_IMAGE_OPEN;

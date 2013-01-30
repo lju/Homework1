@@ -169,7 +169,7 @@ function drawHealth() {
 		// isPaused = false;
 		// intervalID = setInterval(40, mainLoop);
 	// }
-	
+
 	// else
 	// {
 		// isPaused = true;
@@ -195,7 +195,7 @@ function checkForKeys()
 			// isPaused = false;
 			// intervalID = setInterval(40, mainLoop);
 		// }
-		
+
 		// else
 		// {
 			// isPaused = true;
@@ -212,18 +212,19 @@ function checkForKeys()
 		// }
 		//pause();
 	// }
-	
+
 	if (keyPressed(R_KEY))
 	{
 		newGame();
 	}
-	
+
 	if (keyPressed(I_KEY))
 	{
 		clearInterval(intervalID);
 		gameState = 1;
 		initState();
 	}
+
 }
 
 function checkForKeysTimer()

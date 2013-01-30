@@ -18,14 +18,14 @@ var KOSBIE_IMAGE_OPEN = "img/kosbie-open.png";
 var KOSBIE_IMAGE_CLOSED = "img/kosbie-closed.png";
 
 var PERIOD = 40; // how many ms to wait between calls to mainLoop.
-var OFFMAP_SIZE = 50;
+var OFFMAP_SIZE = 20;
  // how many off right and down you don't display (outside of canvas).
 
 var MAX_HEALTH = 100;
 var SHIP_RADIUS = 15;
 var ACCELERATION = 0.90;
 var TURN_SPEED = 0.2; // radians/tick when holding left or righ
-var SHIP_SHIELDS = [[100000, "blue"], [25, "yellow"]];
+var SHIP_SHIELDS = [[25, "blue"], [25, "yellow"]];
 // var SHIP_SHIELDS = [[100000, "green"], [25, "blue"], [25, "yellow"]];
 var SHIP_HEALTH_COLOR = "red";
 
@@ -53,17 +53,17 @@ var ALIEN_DAMAGE; // = 0.05;
 var ALIEN_PERIOD; // = 10000;
 var ALIEN_MAX_HEALTH; // = 3; // number of bullets to kill an alien
 
-var KOSBIE_MAX_HEALTH = 10;
+var KOSBIE_MAX_HEALTH = 20;
 var KOSBIE_PERIOD = 2000; // how often kosbie can attack
-var KOSBIE_MOUTH_OPEN_TIME = 500; // kosbie leaves his mouth open (only visual)
+var KOSBIE_MOUTH_OPEN_TIME = 1500; // kosbie leaves his mouth open (only visual)
 var KOSBIE_ANGLE = 3.0; // radians of kosbie spread
 var KOSBIE_PHRASE = "carpediem"; // what else?
-var KOSBIE_RADIUS = 30.0;
+var KOSBIE_RADIUS = 50.0;
 
 var LETTER_SPEED = 2.0;
 var LETTER_FONT = "12px Courier";
 var LETTER_COLOR = "purple";
-var LETTER_RADIUS = 10.0; // you'll have to do some experiment to make
+var LETTER_RADIUS = 7.0; // you'll have to do some experiment to make
                           // this match up with the font
 var LETTER_DAMAGE = 0.1;
 
@@ -129,6 +129,14 @@ function SET_CONSTANTS(currentGameState)
 			ALIEN_SPEED = 6.0
 			//ALIEN_MAX_HEALTH = 3;
 			break;
+    case 6:
+        ASTEROID_PERIOD = 2000;
+        ASTEROID_SPEED = 9.0;
+        ASTEROID_MIN_RADIUS = 10.0;
+        ASTEROID_SPLIT_SPEED = 6.0;
+        ALIEN_PERIOD = 5000;
+        ALIEN_SPEED = 6.0;
+        break;
 	}
 }
 

@@ -27,6 +27,7 @@ function Letter(x, y, vx, vy, letter) {
 
     // do nothing function: you can't destroy letters!
     this.hit = function() {
+        this.shouldPersist = false;
     };
 
     this.draw = function() {

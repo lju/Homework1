@@ -15,6 +15,7 @@ var lastBulletFired; //  = 0;
 var score; //  = 0;
 var gameOver; //  = false;
 var isPaused; //  = false;
+var pPressedLastTime; // was p being held last tick?
 var intervalID;
 //checkForKeysTimer();
 
@@ -38,13 +39,16 @@ function newGameVars()
 	ship = new Ship(100, 100, SHIP_RADIUS, 1, 1, 0);
 	bullets = [];
 	// hazard = asteroids, aliens, etc.
-	hazards = [new Kosbie(300, 50)];
+	hazards = [];
 	lastAsteroidSpawn = 0;
 	lastAlienSpawn = 0;
 	lastBulletFired = 0;
 	score = 0;
 	gameOver = false;
 	isPaused = false;
+    pPressedLastTime = false;
+	gameState = 1;
+	score = 0;
 	//var backgroundImage = new Image();
 	//backgroundImage.src = BACKGROUND_IMAGE;
 }
@@ -59,13 +63,9 @@ function newGame() {
     canvas.addEventListener('keyup', onKeyUp, false);
     canvas.setAttribute('tabindex','0');
     canvas.focus();
-	gameState = 1;
-	score = 0;
-	ship.health = MAX_HEALTH;
 	SET_CONSTANTS(gameState);
 	checkForKeysTimer();
     intervalID = setInterval(mainLoop, PERIOD);
-
 }
 
 /* This function is called to update everything: move the ship, kill things,
@@ -73,31 +73,43 @@ function newGame() {
 function mainLoop() {
     var i, newBullets, now, vec, newAsteroid;
 
-	//if (keyPressed(P_KEY)) // checks every 40 ms, where else can we put it?
-	//{
-	//	pause();
-	//}
-	//
-	//if (keyPressed(R_KEY))
-	//{
-	//	init();
-	//}
-
 	if (!isPaused){
-		if (score < 50) { gameState = 1; }
-		else if (score >= 50 && score < 100) { gameState = 2; }
-		else if (score >= 100 && score < 150) { gameState = 3; }
-		else if (score >= 150 && score < 200) { gameState = 4; }
-		else { gameState = 5; }
+        // set new gameState if necessary
+        var oldGameState = gameState;
+		if (score < 50) {
+            gameState = 1;
+        }
+		else if (score >= 50 && score < 100) {
+            gameState = 2;
+        }
+		else if (score >= 100 && score < 150) {
+            gameState = 3;
+        }
+		else if (score >= 150 && score < 200) {
+            gameState = 4;
+        }
+		else if (score >= 200 && score < 250) {
+            gameState = 5;
+        }
+		else {
+            gameState = 6;
+        }
+        // only set constants when there was a change
+        if (oldGameState !== gameState) {
+            SET_CONSTANTS(gameState);
+            if (gameState === 6) {
+                hazards.push(new Kosbie(canvas.width/2, 50));
+            }
+        }
 
-		SET_CONSTANTS(gameState);
-
+        // update everything
 		ship.update();
 		now = getTime();
 		var update = function(x) { x.update(); };
 		bullets.forEach(update);
 		hazards.forEach(update);
-		// delete old bullets
+
+		// delete old bullets and old hazards
 		var shouldPersist = function(x) { return x.shouldPersist; };
 		bullets = bullets.filter(shouldPersist);
 		hazards = hazards.filter(shouldPersist);
@@ -131,6 +143,13 @@ function mainLoop() {
 			hazards.push(newAlien);
 		}
 	}
+
+    // toggle isPaused
+    if (!pPressedLastTime && keyPressed(P_KEY)) {
+        isPaused = !isPaused;
+    }
+    pPressedLastTime = keyPressed(P_KEY);
+
     drawAll();
 };
 
@@ -164,32 +183,25 @@ function drawAll() {
 
 		// draw game over state
         ctx.fillStyle = "black";
-		//ctx.fillRect(gameOverTextPixelLeft - 10, gameOverTextPixelTop - 10, 100, 100);
         ctx.fillStyle = GREEN_COLOR;
         ctx.fillText(gameOverText, gameOverTextPixelLeft, gameOverTextPixelTop);
 		ctx.font = "20px Courier";
         ctx.fillText(scoreText, canvas.width/2 - (scoreWidth/2), canvas.height/2 + 15);
         console.log("Game over");
 
-		//if (keyPressed(R_KEY)) // because clear interval this function stops getting called
-		//{
-		//	init();
-		//}
-
 		clearInterval(intervalID);
     }
 
-	// else if (isPaused)
-	// {
-		// ctx.fillStyle = GREEN_COLOR;
-		// ctx.font = "20px Courier";
-		// var isPausedText = "PAUSED";
-        // var isPausedMeasure = ctx.measureText(isPausedText);
-        // var isPausedWidth = isPausedMeasure.width;
-		// var isPausedTextPixelLeft = canvas.width/2 - (isPausedWidth/2);
-		// var isPausedTextPixelTop = canvas.height/2 - 15;
-        // ctx.fillText(isPausedText, isPausedTextPixelLeft, isPausedTextPixelTop);
-	// }
+	else if (isPaused) {
+		ctx.fillStyle = GREEN_COLOR;
+		ctx.font = "20px Courier";
+		var isPausedText = "PAUSED";
+        var isPausedMeasure = ctx.measureText(isPausedText);
+        var isPausedWidth = isPausedMeasure.width;
+		var isPausedTextPixelLeft = canvas.width/2 - (isPausedWidth/2);
+		var isPausedTextPixelTop = canvas.height/2 - 15;
+        ctx.fillText(isPausedText, isPausedTextPixelLeft, isPausedTextPixelTop);
+	}
 
 	else {
 
