@@ -213,16 +213,32 @@ function drawAll() {
 
 function initState()
 {
+	var initScreen = new Image();
+	initScreen.src = INIT_SCREEN_IMAGE;
+	ctx.drawImage(initScreen, 0, 0, canvas.width, canvas.height);
+
 	function onClick(event)
 	{
 		var x = event.pageX - canvas.offsetLeft;
 		var y = event.pageY - canvas.offsetTop;
 		console.log(x, y);
 
-		if (x >= 212 && x <= 395 && y >= 162 && y <=192)
+		if (x >= 212 && x <= 395 && y >= 162 && y <= 195)
 		{
 			canvas.removeEventListener('mousedown', onClick, false);
 			newGame();
+		}
+
+		else if (x >= 212 && x <= 395 && y >= 217 && y <= 250)
+		{
+			var aboutPage = new Image();
+			aboutPage.src = ABOUT_PAGE;
+			ctx.drawImage(aboutPage, 0, 0, canvas.width, canvas.height);
+		}
+
+		if (x >= 220 && x <= 383 && y >= 345 && y <= 378)
+		{
+			initState();
 		}
 	}
 
