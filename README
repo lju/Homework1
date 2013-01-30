@@ -1,4 +1,25 @@
+Group members:
+Brian Malehorn, malehorn@andrew.cmu.edu
+Lydia Utkin, lju@andrew.cmu.edu
+
+
+========================================
+==== How to run it
+========================================
+
 To run the game, simply open asteroids.html on a browser.
+
+
+========================================
+==== controls
+========================================
+
+You can view the controls in-game by clicking "about."
+
+
+========================================
+==== cheating
+========================================
 
 You can cheat your way through the game by pressing
 
@@ -9,5 +30,34 @@ This will automatically change the level, which determines how often enemies
 spawn and how hard they are. Some weird things might happen if decrease the
 score (e.g. multiple final bosses), but increasing the score should work fine.
 
+You'll want to get to level 6, though, because the final boss is hilarious.
 
-You'll want to get to level 6, though, because...you'll see.
+
+========================================
+==== implementation
+========================================
+
+Here's what we used from class:
+
+- javascript in separate files: we had a separate file for each constructor, as
+  well as several other separate files to logically partition the code.
+
+- images: almost everything in the game is an image. We scale them to be the
+  size of their hit circles.
+
+- callbacks: mainLoop is set to be called on a small interval, which is how we
+  update the game.
+
+- constructors: we have lots of contructors. Many of them share the methods
+  (.update(), .draw(), etc.) so they can be all treated the same.
+
+- key events, mouse events: how else would we get user input?
+
+
+========================================
+==== extra
+========================================
+
+You can get this game on github via
+
+git clone git@github.com:lju/Homework1

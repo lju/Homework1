@@ -16,6 +16,7 @@ var ABOUT_PAGE = "img/aboutPage.png";
 var INIT_SCREEN_IMAGE = "img/initScreen.png";
 var KOSBIE_IMAGE_OPEN = "img/kosbie-open.png";
 var KOSBIE_IMAGE_CLOSED = "img/kosbie-closed.png";
+var GAME_OVER_IMAGE = "img/gameOverImage.png";
 
 var PERIOD = 40; // how many ms to wait between calls to mainLoop.
 var OFFMAP_SIZE = 20;
@@ -66,6 +67,13 @@ var LETTER_COLOR = "purple";
 var LETTER_RADIUS = 7.0; // you'll have to do some experiment to make
                           // this match up with the font
 var LETTER_DAMAGE = 0.1;
+
+// there's no level 1 cutoff because level 1 is just < 50
+var LEVEL_2_CUTOFF = 25; // minimum number of points to get to level 2
+var LEVEL_3_CUTOFF = 80;
+var LEVEL_4_CUTOFF = 130;
+var LEVEL_5_CUTOFF = 200;
+var LEVEL_6_CUTOFF = 300;
 
 var GREEN_COLOR = "#7FFF00";
 

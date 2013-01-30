@@ -5,25 +5,25 @@ var ctx = canvas.getContext("2d");
 
 //canvas.addEventListener('onmousedown', onClick, false);
 
-var ship; // = new Ship(100, 100, SHIP_RADIUS, 1, 1, 0);
-var bullets; //  = [];
+var ship;
+var bullets;
 // hazard = asteroids, aliens, etc.
-var hazards; //  = [];
-var lastAsteroidSpawn; //  = 0;
-var lastAlienSpawn; //  = 0;
-var lastBulletFired; //  = 0;
-var score; //  = 0;
-var gameOver; //  = false;
-var isPaused; //  = false;
+var hazards;
+var lastAsteroidSpawn;
+var lastAlienSpawn;
+var lastBulletFired;
+var score;
+var gameOver;
+var isPaused;
 var pPressedLastTime; // was p being held last tick?
 var intervalID;
 
 var backgroundImage = new Image();
 backgroundImage.src = BACKGROUND_IMAGE;
-
 var initScreen = new Image();
 initScreen.src = INIT_SCREEN_IMAGE;
-
+var gameOverImage = new Image();
+gameOverImage.src = GAME_OVER_IMAGE;
 
 function newGameVars()
 {
@@ -31,9 +31,9 @@ function newGameVars()
 	bullets = [];
 	// hazard = asteroids, aliens, etc.
 	hazards = [];
-	lastAsteroidSpawn = 0;
-	lastAlienSpawn = 0;
-	lastBulletFired = 0;
+	lastAsteroidSpawn = getTime();
+	lastAlienSpawn = getTime();
+	lastBulletFired = getTime();
 	score = 0;
 	gameOver = false;
 	isPaused = false;
@@ -61,6 +61,12 @@ function newGame() {
 function mainLoop() {
     var i, newBullets, now, vec, newAsteroid;
 
+    // toggle isPaused
+    if (!pPressedLastTime && keyPressed(P_KEY)) {
+        isPaused = !isPaused;
+    }
+    pPressedLastTime = keyPressed(P_KEY);
+
 	if (!isPaused){
         // set new gameState if necessary
         var oldGameState = gameState;
@@ -68,24 +74,19 @@ function mainLoop() {
         if (keyPressed(EQUALS_KEY)) {
             score += CHEAT_INCREMEMT;
         } else if (keyPressed(MINUS_KEY)){
-            score -= 50;
+            score -= CHEAT_INCREMENT;
         }
-		if (score < 50) {
+		if (score < LEVEL_2_CUTOFF) {
             gameState = 1;
-        }
-		else if (score >= 50 && score < 100) {
+        } else if (score >= LEVEL_2_CUTOFF && score < LEVEL_3_CUTOFF) {
             gameState = 2;
-        }
-		else if (score >= 100 && score < 150) {
+        } else if (score >= LEVEL_3_CUTOFF && score < LEVEL_4_CUTOFF) {
             gameState = 3;
-        }
-		else if (score >= 150 && score < 200) {
+        } else if (score >= LEVEL_4_CUTOFF && score < LEVEL_5_CUTOFF) {
             gameState = 4;
-        }
-		else if (score >= 200 && score < 250) {
+        } else if (score >= LEVEL_5_CUTOFF && score < LEVEL_6_CUTOFF) {
             gameState = 5;
-        }
-		else {
+        } else {
             gameState = 6;
         }
         // only set constants when there was a change
@@ -139,11 +140,6 @@ function mainLoop() {
 		}
 	}
 
-    // toggle isPaused
-    if (!pPressedLastTime && keyPressed(P_KEY)) {
-        isPaused = !isPaused;
-    }
-    pPressedLastTime = keyPressed(P_KEY);
 
     drawAll();
 };
@@ -160,28 +156,19 @@ function drawAll() {
     //var scoreHeight = scoreMeasure.height;
 
     if (gameOver) {
-        //clearInterval(intervalID);
-
-        drawHealth();
 
         // stop loop from running
         clearInterval(intervalID);
-        ctx.fillStyle = GREEN_COLOR;
-		ctx.font = "40px Courier";
 
-		// measure game over text
-        var gameOverText = "GAME OVER";
-        var measure = ctx.measureText(gameOverText);
-        var gameOverWidth = measure.width;
-		var gameOverTextPixelLeft = canvas.width/2 - (gameOverWidth/2);
-		var gameOverTextPixelTop = canvas.height/2 - 30;
+        drawHealth();
 
-		// draw game over state
-        ctx.fillStyle = "black";
+        // draw "GAME OVER"
+        ctx.drawImage(gameOverImage, 0, 0, canvas.width, canvas.height);
+
+		// draw "score: x"
         ctx.fillStyle = GREEN_COLOR;
-        ctx.fillText(gameOverText, gameOverTextPixelLeft, gameOverTextPixelTop);
 		ctx.font = "20px Courier";
-        ctx.fillText(scoreText, canvas.width/2 - (scoreWidth/2), canvas.height/2 + 15);
+        ctx.fillText(scoreText, canvas.width/2 - (scoreWidth/2), canvas.height/2);
 
 		clearInterval(intervalID);
     }
