@@ -1,1 +1,13 @@
-asteroids.html still doesn't work in chrome or firefox :(
+To run the game, simply open asteroids.html on a browser.
+
+You can cheat your way through the game by pressing
+
+'=': increase score
+'-': decrease score
+
+This will automatically change the level, which determines how often enemies
+spawn and how hard they are. Some weird things might happen if decrease the
+score (e.g. multiple final bosses), but increasing the score should work fine.
+
+
+You'll want to get to level 6, though, because...you'll see.

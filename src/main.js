@@ -17,15 +17,7 @@ var gameOver; //  = false;
 var isPaused; //  = false;
 var pPressedLastTime; // was p being held last tick?
 var intervalID;
-//checkForKeysTimer();
 
-// var hazards = [new Kosbie(300, 50)];
-// var hazards = [];
-// var lastAsteroidSpawn = 0;
-// var lastAlienSpawn = 0;
-// var lastBulletFired = 0;
-// var score = 0;
-// var gameOver = false;
 var backgroundImage = new Image();
 backgroundImage.src = BACKGROUND_IMAGE;
 
@@ -35,7 +27,6 @@ initScreen.src = INIT_SCREEN_IMAGE;
 
 function newGameVars()
 {
-	console.log("newGame being called");
 	ship = new Ship(100, 100, SHIP_RADIUS, 1, 1, 0);
 	bullets = [];
 	// hazard = asteroids, aliens, etc.
@@ -49,15 +40,12 @@ function newGameVars()
     pPressedLastTime = false;
 	gameState = 1;
 	score = 0;
-	//var backgroundImage = new Image();
-	//backgroundImage.src = BACKGROUND_IMAGE;
 }
 
 /* The function that starts it all. Do some basic startup garbage, call
  * mainLoop, and you're done. */
 function newGame() {
 	clearInterval(intervalID);
-	console.log("init being called");
 	newGameVars();
     canvas.addEventListener('keydown', onKeyDown, false);
     canvas.addEventListener('keyup', onKeyUp, false);
@@ -76,6 +64,12 @@ function mainLoop() {
 	if (!isPaused){
         // set new gameState if necessary
         var oldGameState = gameState;
+        // cheat some more or fewer points
+        if (keyPressed(EQUALS_KEY)) {
+            score += CHEAT_INCREMEMT;
+        } else if (keyPressed(MINUS_KEY)){
+            score -= 50;
+        }
 		if (score < 50) {
             gameState = 1;
         }
@@ -101,6 +95,7 @@ function mainLoop() {
                 hazards.push(new Kosbie(canvas.width/2, 50));
             }
         }
+
 
         // update everything
 		ship.update();
@@ -187,7 +182,6 @@ function drawAll() {
         ctx.fillText(gameOverText, gameOverTextPixelLeft, gameOverTextPixelTop);
 		ctx.font = "20px Courier";
         ctx.fillText(scoreText, canvas.width/2 - (scoreWidth/2), canvas.height/2 + 15);
-        console.log("Game over");
 
 		clearInterval(intervalID);
     }
@@ -233,23 +227,19 @@ function initState()
 	{
 		var x = event.pageX - canvas.offsetLeft;
 		var y = event.pageY - canvas.offsetTop;
-		console.log(x, y);
 
-		if (x >= 212 && x <= 395 && y >= 162 && y <= 195)
-		{
+		if (x >= 212 && x <= 395 && y >= 162 && y <= 195) {
 			canvas.removeEventListener('mousedown', onClick, false);
 			newGame();
 		}
 
-		else if (x >= 212 && x <= 395 && y >= 217 && y <= 250)
-		{
+		else if (x >= 212 && x <= 395 && y >= 217 && y <= 250) {
 			var aboutPage = new Image();
 			aboutPage.src = ABOUT_PAGE;
 			ctx.drawImage(aboutPage, 0, 0, canvas.width, canvas.height);
 		}
 
-		if (x >= 220 && x <= 383 && y >= 345 && y <= 378)
-		{
+		if (x >= 220 && x <= 383 && y >= 345 && y <= 378) {
 			initState();
 		}
 	}

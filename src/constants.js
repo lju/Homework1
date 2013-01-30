@@ -25,8 +25,8 @@ var MAX_HEALTH = 100;
 var SHIP_RADIUS = 15;
 var ACCELERATION = 0.90;
 var TURN_SPEED = 0.2; // radians/tick when holding left or righ
-var SHIP_SHIELDS = [[25, "blue"], [25, "yellow"]];
-// var SHIP_SHIELDS = [[100000, "green"], [25, "blue"], [25, "yellow"]];
+// var SHIP_SHIELDS = [[25, "blue"], [25, "yellow"]];
+var SHIP_SHIELDS = [];
 var SHIP_HEALTH_COLOR = "red";
 
 var BULLET_SPEED = 10.0;
@@ -140,6 +140,8 @@ function SET_CONSTANTS(currentGameState)
 	}
 }
 
+var CHEAT_INCREMEMT = 5; // how many points/tick you get while cheating
+
 var SPACE = 32;
 var LEFT = 37;
 var UP = 38;
@@ -147,4 +149,6 @@ var RIGHT = 39;
 var DOWN = 40;
 var P_KEY = 80;
 var R_KEY = 82;
-var I_KEY = 73;
+var S_KEY = 83;
+var EQUALS_KEY = 187;
+var MINUS_KEY = 189;

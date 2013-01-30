@@ -146,7 +146,6 @@ function drawHealth() {
     } else {
         ctx.fillStyle = "red"; // I will make this more specific / prettier
     }
-    ctx.fillStyle = SHIP_HEALTH_COLOR;
     var percentageFull = ship.health / MAX_HEALTH;
     percentageFull = max(0.0, percentageFull);
     ctx.fillRect(healthWidth+5, 12,
@@ -161,65 +160,13 @@ function drawHealth() {
     }
 }
 
-// pauses/unpauses the game
-// function pause()
-// {
-	// if (isPaused)
-	// {
-		// isPaused = false;
-		// intervalID = setInterval(40, mainLoop);
-	// }
-
-	// else
-	// {
-		// isPaused = true;
-		// ctx.fillStyle = GREEN_COLOR;
-		// ctx.font = "20px Courier";
-		// var isPausedText = "PAUSED";
-        // var isPausedMeasure = ctx.measureText(isPausedText);
-        // var isPausedWidth = isPausedMeasure.width;
-		// var isPausedTextPixelLeft = canvas.width/2 - (isPausedWidth/2);
-		// var isPausedTextPixelTop = canvas.height/2 - 15;
-        // ctx.fillText(isPausedText, isPausedTextPixelLeft, isPausedTextPixelTop);
-		// clearInterval(intervalID);
-		// checkForKeys();
-	// }
-// }
-
 function checkForKeys()
 {
-	// if (keyPressed(P_KEY))
-	// {
-		// if (isPaused)
-		// {
-			// isPaused = false;
-			// intervalID = setInterval(40, mainLoop);
-		// }
-
-		// else
-		// {
-			// isPaused = true;
-			// ctx.fillStyle = GREEN_COLOR;
-			// ctx.font = "20px Courier";
-			// var isPausedText = "PAUSED";
-			// var isPausedMeasure = ctx.measureText(isPausedText);
-			// var isPausedWidth = isPausedMeasure.width;
-			// var isPausedTextPixelLeft = canvas.width/2 - (isPausedWidth/2);
-			// var isPausedTextPixelTop = canvas.height/2 - 15;
-			// ctx.fillText(isPausedText, isPausedTextPixelLeft, isPausedTextPixelTop);
-			// clearInterval(intervalID);
-			// checkForKeys();
-		// }
-		//pause();
-	// }
-
-	if (keyPressed(R_KEY))
-	{
+	if (keyPressed(R_KEY)) {
 		newGame();
 	}
 
-	if (keyPressed(I_KEY))
-	{
+	if (keyPressed(S_KEY)) {
 		clearInterval(intervalID);
 		gameState = 1;
 		initState();
@@ -229,7 +176,7 @@ function checkForKeys()
 
 function checkForKeysTimer()
 {
-	checkForKeysInterval = setInterval(checkForKeys, 1);
+	checkForKeysInterval = setInterval(checkForKeys, PERIOD);
 }
 
 function Button(left, top, width, height)
