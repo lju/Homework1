@@ -1,6 +1,5 @@
 /* All the initialization and main loop stuff goes here. */
 
-
 var canvas = document.getElementById("myCanvas");
 var ctx = canvas.getContext("2d");
 
@@ -202,29 +201,30 @@ function drawAll() {
 
         ctx.fillStyle = GREEN_COLOR;
         ctx.fillText(scoreText, canvas.width - scoreWidth - 5, 20);
-		ctx.fillText("Level: " + gameSrtate, canvas.width - 100, canvas.height - 10);
+		ctx.fillText("Level: " + gameState, canvas.width - 100, canvas.height - 10);
     }
 }
 
 function initState()
 {
-	ctx.fillStyle = "red";
-	button1 = new Button(canvas.width/2 - 50, canvas.height/2 - 40, 100, 40);
-	var button2 = new Button(canvas.width/2 - 50, canvas.height/2 + 40, 100, 40);
+	//ctx.fillStyle = "red";
+	//button1 = new Button(canvas.width/2 - 50, canvas.height/2 - 40, 100, 40);
+	//var button2 = new Button(canvas.width/2 - 50, canvas.height/2 + 40, 100, 40);
 	
-	ctx.fillRect(button1.left, button1.top, button1.width, button1.height);
-	ctx.fillRect(button2.left, button2.top, button2.width, button2.height);
-	canvas.addEventListener('onclick', onClick, false);
+	//ctx.fillRect(button1.left, button1.top, button1.width, button1.height);
+	//ctx.fillRect(button2.left, button2.top, button2.width, button2.height);
+	canvas.addEventListener('mousedown', onClick, false);
 	
-	button1.onclick = onClick(); //function() { console.log("button1"); newGame() };
-	button2.onclick = onClick(); //function() { console.log("button2"); newGame() };
-	console.log("should draw");
+	//console.log(button1);
+	//button1.onclick = onClick(); //function() { console.log("button1"); newGame() };
+	//button2.onclick = onClick(); //function() { console.log("button2"); newGame() };
+	//console.log("should draw");
 	//ctx.fillStyle = "black";
 	//ctx.fillRect(0, 0, canvas.width, canvas.height);
 	var initScreen = new Image();
 	initScreen.src = INIT_SCREEN_IMAGE;
-	//ctx.drawImage(initScreen, 0, 0, canvas.width, canvas.height);
+	ctx.drawImage(initScreen, 0, 0, canvas.width, canvas.height);
 	//newGame();
 }
 
-initState();
+window.onload = initState;

@@ -205,13 +205,8 @@ function Button(left, top, width, height)
 
 function onClick(event)
 {
-	console.log(String(event));
-	if (!event){ console.log("click?");}
-	else {
-    var x = event.pageX - canvas.offsetLeft;  // do not use event.x, it's not cross-browser!!!
-    var y = event.pageY - canvas.offsetTop;
-    ctx.fillStyle = "red";
-    ctx.fillRect(x-25, y-25, 50, 50);
-	}
-	console.log("click");
+	var x = event.pageX - canvas.offsetLeft;  // do not use event.x, it's not cross-browser!!!
+	var y = event.pageY - canvas.offsetTop;
+	ctx.fillStyle = "red";
+	ctx.fillRect(x-25, y-25, 50, 50);
 }
