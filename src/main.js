@@ -28,13 +28,17 @@ var intervalID;
 var backgroundImage = new Image();
 backgroundImage.src = BACKGROUND_IMAGE;
 
+var initScreen = new Image();
+initScreen.src = INIT_SCREEN_IMAGE;
+
+
 function newGameVars()
 {
 	console.log("newGame being called");
 	ship = new Ship(100, 100, SHIP_RADIUS, 1, 1, 0);
 	bullets = [];
 	// hazard = asteroids, aliens, etc.
-	hazards = [];
+	hazards = [new Kosbie(300, 50)];
 	lastAsteroidSpawn = 0;
 	lastAlienSpawn = 0;
 	lastBulletFired = 0;
@@ -61,13 +65,14 @@ function newGame() {
 	SET_CONSTANTS(gameState);
 	checkForKeysTimer();
     intervalID = setInterval(mainLoop, PERIOD);
+
 }
 
 /* This function is called to update everything: move the ship, kill things,
  * draw everything. */
 function mainLoop() {
     var i, newBullets, now, vec, newAsteroid;
-    
+
 	//if (keyPressed(P_KEY)) // checks every 40 ms, where else can we put it?
 	//{
 	//	pause();
@@ -77,16 +82,16 @@ function mainLoop() {
 	//{
 	//	init();
 	//}
-	
+
 	if (!isPaused){
 		if (score < 50) { gameState = 1; }
 		else if (score >= 50 && score < 100) { gameState = 2; }
 		else if (score >= 100 && score < 150) { gameState = 3; }
 		else if (score >= 150 && score < 200) { gameState = 4; }
 		else { gameState = 5; }
-		
+
 		SET_CONSTANTS(gameState);
-		
+
 		ship.update();
 		now = getTime();
 		var update = function(x) { x.update(); };
@@ -149,14 +154,14 @@ function drawAll() {
         clearInterval(intervalID);
         ctx.fillStyle = GREEN_COLOR;
 		ctx.font = "40px Courier";
-		
+
 		// measure game over text
         var gameOverText = "GAME OVER";
         var measure = ctx.measureText(gameOverText);
         var gameOverWidth = measure.width;
 		var gameOverTextPixelLeft = canvas.width/2 - (gameOverWidth/2);
 		var gameOverTextPixelTop = canvas.height/2 - 30;
-		
+
 		// draw game over state
         ctx.fillStyle = "black";
 		//ctx.fillRect(gameOverTextPixelLeft - 10, gameOverTextPixelTop - 10, 100, 100);
@@ -165,15 +170,15 @@ function drawAll() {
 		ctx.font = "20px Courier";
         ctx.fillText(scoreText, canvas.width/2 - (scoreWidth/2), canvas.height/2 + 15);
         console.log("Game over");
-		
+
 		//if (keyPressed(R_KEY)) // because clear interval this function stops getting called
 		//{
 		//	init();
 		//}
-		
+
 		clearInterval(intervalID);
     }
-	
+
 	// else if (isPaused)
 	// {
 		// ctx.fillStyle = GREEN_COLOR;
@@ -185,7 +190,7 @@ function drawAll() {
 		// var isPausedTextPixelTop = canvas.height/2 - 15;
         // ctx.fillText(isPausedText, isPausedTextPixelLeft, isPausedTextPixelTop);
 	// }
-	
+
 	else {
 
         ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -210,22 +215,20 @@ function initState()
 {
 	function onClick(event)
 	{
-		var x = event.pageX - canvas.offsetLeft;  // do not use event.x, it's not cross-browser!!!
+		var x = event.pageX - canvas.offsetLeft;
 		var y = event.pageY - canvas.offsetTop;
 		console.log(x, y);
-		
+
 		if (x >= 212 && x <= 395 && y >= 162 && y <=192)
 		{
 			canvas.removeEventListener('mousedown', onClick, false);
 			newGame();
 		}
 	}
-	
+
 	canvas.addEventListener('mousedown', onClick, false);
-	var initScreen = new Image();
-	initScreen.src = INIT_SCREEN_IMAGE;
 	ctx.drawImage(initScreen, 0, 0, canvas.width, canvas.height);
-	//newGame();
 }
+
 
 window.onload = initState;

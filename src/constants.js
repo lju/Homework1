@@ -24,7 +24,7 @@ var MAX_HEALTH = 100;
 var SHIP_RADIUS = 15;
 var ACCELERATION = 0.90;
 var TURN_SPEED = 0.2; // radians/tick when holding left or righ
-var SHIP_SHIELDS = [[25, "blue"], [25, "yellow"]];
+var SHIP_SHIELDS = [[100000, "blue"], [25, "yellow"]];
 // var SHIP_SHIELDS = [[100000, "green"], [25, "blue"], [25, "yellow"]];
 var SHIP_HEALTH_COLOR = "red";
 
@@ -90,7 +90,7 @@ function SET_CONSTANTS(currentGameState)
 			ALIEN_RADIUS = 30.0;
 			ALIEN_DAMAGE = 0.05;
 			ALIEN_PERIOD = 100000000;
-			ALIEN_MAX_HEALTH = 3; 
+			ALIEN_MAX_HEALTH = 3;
 			break;
 		case 2:
 			ASTEROID_PERIOD = 2000;
