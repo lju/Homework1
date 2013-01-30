@@ -16,6 +16,7 @@ var score; //  = 0;
 var gameOver; //  = false;
 var isPaused; //  = false;
 var intervalID;
+//checkForKeysTimer();
 
 // var hazards = [new Kosbie(300, 50)];
 // var hazards = [];
@@ -173,17 +174,17 @@ function drawAll() {
 		clearInterval(intervalID);
     }
 	
-	else if (isPaused)
-	{
-		ctx.fillStyle = GREEN_COLOR;
-		ctx.font = "20px Courier";
-		var isPausedText = "PAUSED";
-        var isPausedMeasure = ctx.measureText(isPausedText);
-        var isPausedWidth = isPausedMeasure.width;
-		var isPausedTextPixelLeft = canvas.width/2 - (isPausedWidth/2);
-		var isPausedTextPixelTop = canvas.height/2 - 15;
-        ctx.fillText(isPausedText, isPausedTextPixelLeft, isPausedTextPixelTop);
-	}
+	// else if (isPaused)
+	// {
+		// ctx.fillStyle = GREEN_COLOR;
+		// ctx.font = "20px Courier";
+		// var isPausedText = "PAUSED";
+        // var isPausedMeasure = ctx.measureText(isPausedText);
+        // var isPausedWidth = isPausedMeasure.width;
+		// var isPausedTextPixelLeft = canvas.width/2 - (isPausedWidth/2);
+		// var isPausedTextPixelTop = canvas.height/2 - 15;
+        // ctx.fillText(isPausedText, isPausedTextPixelLeft, isPausedTextPixelTop);
+	// }
 	
 	else {
 
@@ -207,20 +208,20 @@ function drawAll() {
 
 function initState()
 {
-	//ctx.fillStyle = "red";
-	//button1 = new Button(canvas.width/2 - 50, canvas.height/2 - 40, 100, 40);
-	//var button2 = new Button(canvas.width/2 - 50, canvas.height/2 + 40, 100, 40);
+	function onClick(event)
+	{
+		var x = event.pageX - canvas.offsetLeft;  // do not use event.x, it's not cross-browser!!!
+		var y = event.pageY - canvas.offsetTop;
+		console.log(x, y);
+		
+		if (x >= 212 && x <= 395 && y >= 162 && y <=192)
+		{
+			canvas.removeEventListener('mousedown', onClick, false);
+			newGame();
+		}
+	}
 	
-	//ctx.fillRect(button1.left, button1.top, button1.width, button1.height);
-	//ctx.fillRect(button2.left, button2.top, button2.width, button2.height);
 	canvas.addEventListener('mousedown', onClick, false);
-	
-	//console.log(button1);
-	//button1.onclick = onClick(); //function() { console.log("button1"); newGame() };
-	//button2.onclick = onClick(); //function() { console.log("button2"); newGame() };
-	//console.log("should draw");
-	//ctx.fillStyle = "black";
-	//ctx.fillRect(0, 0, canvas.width, canvas.height);
 	var initScreen = new Image();
 	initScreen.src = INIT_SCREEN_IMAGE;
 	ctx.drawImage(initScreen, 0, 0, canvas.width, canvas.height);

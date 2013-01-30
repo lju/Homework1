@@ -162,31 +162,67 @@ function drawHealth() {
 }
 
 // pauses/unpauses the game
-function pause()
-{
-	if (isPaused)
-	{
-		isPaused = false;
-		intervalID = setInterval(40, mainLoop);
-	}
+// function pause()
+// {
+	// if (isPaused)
+	// {
+		// isPaused = false;
+		// intervalID = setInterval(40, mainLoop);
+	// }
 	
-	else
-	{
-		isPaused = true;
-		//clearInterval(intervalID);
-	}
-}
+	// else
+	// {
+		// isPaused = true;
+		// ctx.fillStyle = GREEN_COLOR;
+		// ctx.font = "20px Courier";
+		// var isPausedText = "PAUSED";
+        // var isPausedMeasure = ctx.measureText(isPausedText);
+        // var isPausedWidth = isPausedMeasure.width;
+		// var isPausedTextPixelLeft = canvas.width/2 - (isPausedWidth/2);
+		// var isPausedTextPixelTop = canvas.height/2 - 15;
+        // ctx.fillText(isPausedText, isPausedTextPixelLeft, isPausedTextPixelTop);
+		// clearInterval(intervalID);
+		// checkForKeys();
+	// }
+// }
 
 function checkForKeys()
 {
-	if (keyPressed(P_KEY))
-	{
-		pause();
-	}
+	// if (keyPressed(P_KEY))
+	// {
+		// if (isPaused)
+		// {
+			// isPaused = false;
+			// intervalID = setInterval(40, mainLoop);
+		// }
+		
+		// else
+		// {
+			// isPaused = true;
+			// ctx.fillStyle = GREEN_COLOR;
+			// ctx.font = "20px Courier";
+			// var isPausedText = "PAUSED";
+			// var isPausedMeasure = ctx.measureText(isPausedText);
+			// var isPausedWidth = isPausedMeasure.width;
+			// var isPausedTextPixelLeft = canvas.width/2 - (isPausedWidth/2);
+			// var isPausedTextPixelTop = canvas.height/2 - 15;
+			// ctx.fillText(isPausedText, isPausedTextPixelLeft, isPausedTextPixelTop);
+			// clearInterval(intervalID);
+			// checkForKeys();
+		// }
+		//pause();
+	// }
 	
 	if (keyPressed(R_KEY))
 	{
 		newGame();
+	}
+	
+	if (keyPressed(I_KEY))
+	{
+		clearInterval(intervalID);
+		gameState = 1;
+		initState();
 	}
 }
 
@@ -201,12 +237,4 @@ function Button(left, top, width, height)
 	this.top = top;
 	this.width = width;
 	this.height = height;
-}
-
-function onClick(event)
-{
-	var x = event.pageX - canvas.offsetLeft;  // do not use event.x, it's not cross-browser!!!
-	var y = event.pageY - canvas.offsetTop;
-	ctx.fillStyle = "red";
-	ctx.fillRect(x-25, y-25, 50, 50);
 }

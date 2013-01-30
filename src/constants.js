@@ -76,12 +76,12 @@ function SET_CONSTANTS(currentGameState)
 			//break;
 		case 1:
 			ASTEROID_PERIOD = 2000; // how long to wait between asteroid creations
-			ASTEROID_SPEED = 3.0;
+			ASTEROID_SPEED = 4.0;
 			ASTEROID_RADIUS = 60.0;
 			ASTEROID_ROTATIONAL_VELOCITY = 0.2; // max spinning speed in radians/tick
 			ASTEROID_DAMAGE = 0.03;
 
-			ASTEROID_MIN_RADIUS = 40.0; // smallest radius that still allows splitting
+			ASTEROID_MIN_RADIUS = 20.0; // smallest radius that still allows splitting
 			ASTEROID_SPLIT_SCALEDOWN = 0.5; // child asteroids are this * parent size
 			ASTEROID_SPLIT_CHILDREN = 2; // how many asteroids are spawned when split
 			ASTEROID_SPLIT_SPEED = 3.0; // how fast child asteroids move, at max
@@ -90,43 +90,43 @@ function SET_CONSTANTS(currentGameState)
 			ALIEN_RADIUS = 30.0;
 			ALIEN_DAMAGE = 0.05;
 			ALIEN_PERIOD = 100000000;
-			ALIEN_MAX_HEALTH = 1; 
+			ALIEN_MAX_HEALTH = 3; 
 			break;
 		case 2:
 			ASTEROID_PERIOD = 2000;
 			ASTEROID_SPEED = 6.0;
 			ASTEROID_MIN_RADIUS = 20.0;
 			ASTEROID_SPLIT_SPEED = 4.0;
-			ALIEN_PERIOD = 100000000; // aliens off?
-			ALIEN_SPEED = 0.0;
-			ALIEN_MAX_HEALTH = 1;
+			ALIEN_PERIOD = 10000; // aliens off?
+			ALIEN_SPEED = 0.5;
+			//ALIEN_MAX_HEALTH = 3;
 			break;
 		case 3:
-			ASTEROID_PERIOD = 1500;
-			ASTEROID_SPEED = 9.0;
+			ASTEROID_PERIOD = 2000;
+			ASTEROID_SPEED = 6.0;
 			ASTEROID_MIN_RADIUS = 20.0;
 			ASTEROID_SPLIT_SPEED = 6.0;
-			ALIEN_PERIOD = 5000;
+			ALIEN_PERIOD = 70000;
 			ALIEN_SPEED = 2.0
-			ALIEN_MAX_HEALTH = 3;
+			//ALIEN_MAX_HEALTH = 3;
 			break;
 		case 4:
-			ASTEROID_PERIOD = 1000;
+			ASTEROID_PERIOD = 2000;
 			ASTEROID_SPEED = 9.0;
-			ASTEROID_MIN_RADIUS = 20.0;
+			ASTEROID_MIN_RADIUS = 10.0;
 			ASTEROID_SPLIT_SPEED = 4.0;
-			ALIEN_PERIOD = 3000;
+			ALIEN_PERIOD = 5000;
 			ALIEN_SPEED = 4.0
-			ALIEN_MAX_HEALTH = 3;
+			//ALIEN_MAX_HEALTH = 3;
 			break;
 		case 5:
-			ASTEROID_PERIOD = 1000;
+			ASTEROID_PERIOD = 2000;
 			ASTEROID_SPEED = 9.0;
-			ASTEROID_MIN_RADIUS = 20.0;
+			ASTEROID_MIN_RADIUS = 10.0;
 			ASTEROID_SPLIT_SPEED = 6.0;
-			ALIEN_PERIOD = 2000;
-			ALIEN_SPEED = 8.0
-			ALIEN_MAX_HEALTH = 3;
+			ALIEN_PERIOD = 5000;
+			ALIEN_SPEED = 6.0
+			//ALIEN_MAX_HEALTH = 3;
 			break;
 	}
 }
@@ -138,3 +138,4 @@ var RIGHT = 39;
 var DOWN = 40;
 var P_KEY = 80;
 var R_KEY = 82;
+var I_KEY = 73;
