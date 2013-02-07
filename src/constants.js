@@ -69,11 +69,11 @@ var LETTER_RADIUS = 7.0; // you'll have to do some experiment to make
 var LETTER_DAMAGE = 0.1;
 
 // there's no level 1 cutoff because level 1 is just < 50
-var LEVEL_2_CUTOFF = 50; // minimum number of points to get to level 2
-var LEVEL_3_CUTOFF = 100;
-var LEVEL_4_CUTOFF = 200;
-var LEVEL_5_CUTOFF = 500;
-var LEVEL_6_CUTOFF = 1000;
+var LEVEL_2_CUTOFF = 30; // minimum number of points to get to level 2
+var LEVEL_3_CUTOFF = 70;
+var LEVEL_4_CUTOFF = 100;
+var LEVEL_5_CUTOFF = 200;
+var LEVEL_6_CUTOFF = 300;
 
 var GREEN_COLOR = "#7FFF00";
 
