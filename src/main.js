@@ -148,6 +148,7 @@ function mainLoop() {
 /* This is the place where everything is drawn from. Every drawFoo() function
  * should be called here and only here! */
 function drawAll() {
+
     ctx.font = "20px Courier";
     ctx.fillStyle = GREEN_COLOR;
     var scoreText = "Score: " + String(score);
@@ -163,7 +164,7 @@ function drawAll() {
         drawHealth();
 
         // draw "GAME OVER"
-        ctx.drawImage(gameOverImage, 150, 25, 300, 350);
+        ctx.drawImage(gameOverImage, 0, 0, canvas.width, canvas.height);
 
 		// draw "score: x"
         ctx.fillStyle = GREEN_COLOR;
@@ -206,27 +207,32 @@ function drawAll() {
 
 function initState()
 {
+
 	var initScreen = new Image();
 	initScreen.src = INIT_SCREEN_IMAGE;
 	ctx.drawImage(initScreen, 0, 0, canvas.width, canvas.height);
 
 	function onClick(event)
 	{
-		var x = event.pageX - canvas.offsetLeft;
-		var y = event.pageY - canvas.offsetTop;
+		var x = event.offsetX
+		var y = event.offsetY;
 
-		if (x >= 212 && x <= 395 && y >= 162 && y <= 195) {
+        // THIS IS WHY YOU DON'T HARD CODE THINGS
+		if (x >= 212/600*canvas.width && x <= 392/600*canvas.width &&
+            y >= 165/600*canvas.height && y <= 191/400*canvas.height) {
 			canvas.removeEventListener('mousedown', onClick, false);
 			newGame();
 		}
 
-		else if (x >= 212 && x <= 395 && y >= 217 && y <= 250) {
+		else if (x >= 215/600*canvas.width && x <= 395/600*canvas.width &&
+                 y >= 220/400*canvas.height && y <= 245/400*canvas.height) {
 			var aboutPage = new Image();
 			aboutPage.src = ABOUT_PAGE;
 			ctx.drawImage(aboutPage, 0, 0, canvas.width, canvas.height);
 		}
 
-		if (x >= 220 && x <= 383 && y >= 345 && y <= 378) {
+		if (x >= 220/600*canvas.width && x <= 383/600*canvas.width &&
+            y >= 345/400*canvas.height && y <= 378/400*canvas.height) {
 			initState();
 		}
 	}
@@ -236,4 +242,12 @@ function initState()
 }
 
 
-window.onload = initState;
+$(window).load(function() {
+    canvas.width = $(window).width() - 50;
+    canvas.height = $(window).height() - 50;
+    initState();
+});
+$(window).resize(function() {
+    canvas.width = $(window).width() - 50;
+    canvas.height = $(window).height() - 50;
+});
